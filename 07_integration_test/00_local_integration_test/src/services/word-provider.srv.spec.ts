@@ -1,0 +1,29 @@
+import { setUp, selectWord, WordCategory} from './word-provider.srv';
+
+describe('word-provider.srv', () => {
+    test('returns a valid selectedWord', () => {
+        // Arrange
+        const categories = [
+            {
+                category: 'clothes', 
+                words: ['pants', 't-shirt']
+            },
+            {
+                category: 'sports', 
+                words: ['football', 'f1']
+            },
+        ];
+
+        const categoryLength = categories.length;
+        const wordCategories: WordCategory[] = categories.map((c, index)  =>  ({
+            categoryId: index,
+            categoryLength: c.words.length
+        }));
+
+        setUp(categoryLength, wordCategories);
+
+        // Act 
+        const selectedWord = selectWord();
+        console.log(selectedWord);
+    });
+});
