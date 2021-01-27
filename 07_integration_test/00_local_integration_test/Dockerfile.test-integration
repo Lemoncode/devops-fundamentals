@@ -1,0 +1,19 @@
+FROM node:alpine3.12
+
+WORKDIR /opt/app
+
+COPY ./src ./src
+
+COPY ./package.json ./package.json
+
+COPY ./package-lock.json ./package-lock.json
+
+COPY ./jest.config.integration.js ./jest.config.integration.js
+
+COPY ./jest.config.specification.js ./jest.config.specification.js
+
+COPY ./tsconfig.json ./tsconfig.json
+
+RUN npm install
+
+CMD [ "npm", "run", "test:integration" ]

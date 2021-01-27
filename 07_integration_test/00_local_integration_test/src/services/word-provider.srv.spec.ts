@@ -24,7 +24,6 @@ describe('word-provider.srv', () => {
 
     // Act
     const selectedWord = selectWord();
-    console.log(selectedWord);
     expect(selectedWord.categoryIndex).toBeLessThanOrEqual(categoryLength - 1);
     expect(selectedWord.wordIndex).toBeLessThanOrEqual(categories[selectedWord.categoryIndex].words.length - 1);
   });

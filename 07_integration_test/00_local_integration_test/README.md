@@ -14,3 +14,14 @@ PORT=
 ```
 
 > Migrations Gist: https://gist.github.com/NigelEarle/70db130cc040cc2868555b29a0278261
+
+## Running Tests
+
+
+```bash
+$ docker-compose -f test-integration.yml up
+```
+
+```bash
+$ docker-compose -f test-integration.yml down --rmi all -v
+```
