@@ -1,9 +1,10 @@
-# Creating basic pipeline
+# Jenkins Integration Test
+
+
+## Basic branch flow
 
 * Create a pipeline that audits the tools
 * The pipeline will run simple tests - No dependencies here
-
-## Basic branch flow
 
 ```groovy
 pipeline {
@@ -49,7 +50,9 @@ stage('unit test') {
 }
 ```
 
-Now it's time to use Docker compose in order to run integration tests
+## Running integartions tests
+
+* Now it's time to use Docker compose in order to run integration tests
 
 ```groovy
 pipeline {
