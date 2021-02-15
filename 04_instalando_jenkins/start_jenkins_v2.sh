@@ -40,4 +40,4 @@ docker container run --name jenkins-blueocean --rm --detach \
 # Ensure that script have permissions to be executed: chmod +x start_jenkins.sh
 # Build image from Dockerfile: docker build -t lemoncode/jenkins .
 # From previous image we can run custom Jenkins version as follows:
-# ./start_jenkins.sh lemoncode/jenkins jenkins jenkins-docker-certs jenkins-data
+# ./start_jenkins_v2.sh lemoncode/jenkins jenkins jenkins-docker-certs jenkins-data
