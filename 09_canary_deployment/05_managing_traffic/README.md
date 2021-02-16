@@ -193,3 +193,19 @@ $ git push
 Go to Jenkins server, and wait until `production` pipeline finishes. Now trigger a new `Build with parameters`, ensure that  `CANARY_DEPLOYMENT` is checked, and click `Build`.
 
 Open a browser and paste `http://a4f317d30ca394c2ca3629ac2cfec68d-2122476700.eu-west-3.elb.amazonaws.com/api/sum?a=2&b=2`
+
+### Inspecting results
+
+Connet to Grafana
+
+```bash
+export ELB=$(kubectl get svc grafana -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+echo "http://$ELB"
+```
+
+Click on explore and the following query:
+
+```
+rate(http_request_duration_seconds_count[30m])
+```
