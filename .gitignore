@@ -111,3 +111,4 @@ __pycache__/
 todo
 src_tmp/
 environment/
+kube-config/
