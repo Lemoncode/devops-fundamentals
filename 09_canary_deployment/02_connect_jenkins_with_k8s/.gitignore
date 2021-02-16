@@ -102,12 +102,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# python
-__pycache__/
-
-# Helpers
-.vagrant/
-todo
-src_tmp/
-environment/
