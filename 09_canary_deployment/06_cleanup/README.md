@@ -19,3 +19,7 @@ $ istioctl manifest generate --set profile=demo | kubectl delete -f -
 ```bash
 $ kubectl delete -f kube/app-deployment.yaml
 ```
+
+```bash
+$ eksctl delete cluster lc-cluster
+```
