@@ -13,7 +13,8 @@ RUN apk add --no-cache \
     make \
     openssl-dev \
     python3-dev \
-    py-pip
+    py-pip \
+    cargo
 
 # install docker-compose via python 
 RUN pip install docker-compose
