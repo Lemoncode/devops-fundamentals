@@ -1,6 +1,6 @@
 ## Autentificación para acceder al registry
 
-El registry soporta autenticación nativa utilizando ficheros htpasswd para almacenar los secretos. Vamos a generar un usuario y contraseña.
+El registry soporta autenticación nativa utilizando ficheros `htpasswd` para almacenar los secretos. Vamos a generar un usuario y contraseña.
 
 > **IMPORTANTE:** El tag `:2.7.1` del registry no contiene los binarios de `htpasswd` (y la :2 que actualmente apunta a `:2.7.1`) por lo que utilizaremos el tag `:2.7.0` para generar el fichero. Más información en este [enlace](https://github.com/docker/docker.github.io/issues/11060).
 

@@ -43,7 +43,7 @@ This is no the way to work with images, there are better ways.
 * fully own your images distribution pipeline
 * integrate image storage and distribution tightly into your in-house development workflow
 
-As alternative, if we don't want tom mantain our own registry we can found cloud solutions, and of course [Docker Hub]('https://hub.docker.com/)
+As alternative, if we don't want to mantain our own registry we can found cloud solutions, and of course [Docker Hub]('https://hub.docker.com/)
 
 ### Creating a local registry
 
