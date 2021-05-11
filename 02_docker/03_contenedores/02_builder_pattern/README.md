@@ -53,7 +53,7 @@ REPOSITORY                                      TAG                 IMAGE ID    
 mygoapp                                         latest              b3ff89eb79bc        36 seconds ago      817MB
 ```
 
-Vamos a refactorizar para reducir el tamaño de la imagen
+Vamos a refactorizar para reducir el tamaño de la imagen:
 
 ```Dockerfile
 FROM golang:latest AS builder
@@ -75,7 +75,9 @@ EXPOSE 8080
 ENTRYPOINT [ "./app" ]
 ```
 
-Si volvemos a construir la imagen
+> NOTA: Es posible tener problemas con la imagen base de Alpine, para evitarlos utilizar `ubuntu:20.04`.
+
+Si volvemos a construir la imagen:
 
 ```bash
 $ docker build -t mygoapp .

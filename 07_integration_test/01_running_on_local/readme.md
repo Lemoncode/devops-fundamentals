@@ -28,7 +28,7 @@ RUN npm install
 CMD [ "npm", "run", "test:integration" ]
 ```
 
-Con esta imagen preparad podemos crear nuestro `docker compose file` para ejecutar los tests de integración:
+Con esta imagen preparada podemos crear nuestro `docker compose file` para ejecutar los tests de integración:
 
 `hangman-back/test-integration.yml`
 
@@ -102,7 +102,7 @@ services:
 1. Docker Compose, expone `depends_on` este comando hará que el contenedor de `seed` no arranque hasta que el servicio `postgres` este listo.
 2. Con Docker Compose podemos ejecutar un comando sobre el contenedor relacionado con nuestro servicio. Notar que aunque el contenedor de postgres este corriendo, no implica que el servidor de base de datos este lsito para ser utilizado, es aquí donde usamos `wait-for-it.sh`, para aseguranos de cuando ejecutemos el ódigo asociado a las migraciones la base de datos este lsita para ser utilizada.
 
-Una vez añadadidas las dependencias, podemos añadir el servicio que corra los tests de integarción.
+Una vez añadadidas las dependencias, podemos incluir el servicio que corra los tests de integración.
 
 ```yaml
 version: "3.8"

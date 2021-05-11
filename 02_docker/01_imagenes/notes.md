@@ -88,7 +88,7 @@ FROM node:6.17.0-stretch-slim
     - `RUN <commad>` (shell form)
     - `RUN ["executable", "param1", "param2"]` (exec form)
 
-La instrrucción `RUN` ejecutará cualquier comando en una nueva capa en sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`. 
+La instrrucción `RUN` ejecutará cualquier comando en una nueva capa sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`. 
 
 > Layering RUN instructions and generating commits conforms to the core concepts of Docker where commits are cheap and containers can be created from any point in an image’s history, much like source control.
 

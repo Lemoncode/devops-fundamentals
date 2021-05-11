@@ -59,7 +59,7 @@ Los `cgroups` trabajan permitiendo al `host` compartir y limitar los recursos a 
 
 ### Namespaces
 
-Los `namespaces` ofrecen una nueva forma de aislamiento para al interacción del proceso con los sistemas operativos, creando el `workspace` llamamos a un coontenedor. `Linux namespaces` son creados via una `syscall` llamada _unshare_, mientras que _clone_ y _setns_ permite manipular los `namespaces` de otras maneras.
+Los `namespaces` ofrecen una nueva forma de aislamiento para al interacción del proceso con los sistemas operativos, creando el `workspace` llamamos a un contenedor. `Linux namespaces` son creados via una `syscall` llamada _unshare_, mientras que _clone_ y _setns_ permite manipular los `namespaces` de otras maneras.
 
 > *unshare()* allows a process (or thread) to disassociate parts of its execution context that are currently being shared with other processes (or threads). Part of the execution context, such as the mount namespace, is shared implicitly when a new process is created using FORK(2) (for more information visit http://man7.org/linux/man-pages/man2/fork.2.html) or VFORK(2) (for more information visit http://man7.org/linux/man-pages/man2/vfork.2.html), while other parts, such as virtual memory, may be shared by explicit request when creating a process or thread using CLONE(2) (for more information visit http://man7.org/linux/man-pages/man2/clone.2.html).
 

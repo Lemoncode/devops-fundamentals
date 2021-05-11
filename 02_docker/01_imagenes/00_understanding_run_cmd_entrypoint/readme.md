@@ -183,7 +183,7 @@ root@248fd9d5a523:/#
 
 #### Exec form
 
-_Exec form_ de `ENTRYPOINT` permite establecer los comandos y parametros y después usa tanto la forma de CMD para establecer parametros adicionales que son más comunes de ser cambiados. Los argumentos de `ENTRYPOINT` son siempre usados, mientras que los de CMD pueden ser sobresctitos mediante argumentos de la línea de comandos cunado el contenedor es ejecutado.
+_Exec form_ de `ENTRYPOINT` permite establecer los comandos y parametros y después usa tanto la forma de CMD para establecer parametros adicionales que son más comunes de ser cambiados. Los argumentos de `ENTRYPOINT` son siempre usados, mientras que los de CMD pueden ser sobresctitos mediante argumentos de la línea de comandos cuando el contenedor es ejecutado.
 
 ```Dockerfile
 FROM ubuntu:20.04

@@ -220,7 +220,7 @@ docker run -d \
   -e "DATABASE_PASSWORD=postgres" \
   -e "DATABASE_POOL_MIN=2" \
   -e "DATABASE_POOL_MAX=10" \
-  jaimesalas/db-migrations
+  jaimesalas/db-migrations ./node_modules/knex/bin/cli.js migrate:latest
 
 # wait until migrations finish
 docker wait migration_container
@@ -282,5 +282,7 @@ if [ ! "$(docker ps -q -f name=${CONTAINER})" ]; then
 fi
 
 echo environment up and running
+
+# ./database/start_db.sh postgres 5432
 
 ```

@@ -12,12 +12,9 @@ RUN apk add --no-cache \
   libffi-dev \
   make \
   openssl-dev \
-  musl-dev \
   python3-dev \
-  cargo \
-  py-pip
-
-RUN pip install cryptography
+  py-pip \
+  cargo
 
 # install docker-compose via python 
 RUN pip install docker-compose
