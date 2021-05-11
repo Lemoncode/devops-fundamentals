@@ -161,7 +161,7 @@ stage('Canary Deploy') {
 
 Check that the Pipeline works fine on Jenkins server.
 
-### 4. Treigger production
+### 4. Trigger production
 
 Update staging
 

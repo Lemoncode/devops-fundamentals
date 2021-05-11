@@ -50,7 +50,7 @@ stage('unit test') {
 }
 ```
 
-## Running integartions tests
+## Running integrations tests
 
 * Now it's time to use Docker compose in order to run integration tests
 

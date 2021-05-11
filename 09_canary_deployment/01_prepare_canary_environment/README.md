@@ -225,7 +225,7 @@ In order to take advantage of all of Istio’s features pods must be running an 
 Istio offers two ways injecting the Istio sidecar into a pod:
 
 * **Manually** using the `istioctl` command. Manual injection directly modifies configuration, like deployments, and injects the proxy configuration into it.
-* **Automatically** using the Istio sidecar injector. You will still need to maually enable Istio in each namespace that you want to be manged by Istio.
+* **Automatically** using the Istio sidecar injector. You will still need to maually enable Istio in each namespace that you want to be managed by Istio.
 
 > We will install the application inside default namespace and allow Istio to automatically Inject the Sidecar
 

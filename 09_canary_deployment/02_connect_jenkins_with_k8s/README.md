@@ -17,7 +17,7 @@ Copy the contents on `~/.kube/config` into `kube-config/config`
 
 Go to `Manage Jenkins` -> `Manage Plugins` -> Select `Available` -> Search for `Kubernetes CLI Plugin` -> Install and restart Jenkins
 
-To get the official plugin documentatio follo this link: [Kubernetes CLI Plugin reference](https://plugins.jenkins.io/kubernetes-cli/)
+To get the official plugin documentation follow this link: [Kubernetes CLI Plugin reference](https://plugins.jenkins.io/kubernetes-cli/)
 
 ### 3. Set credentials on Jenkins
 
