@@ -1,7 +1,7 @@
 ## In a nutshell
 
 * **RUN** executes command(s) in a new layer and creates a new image. E.g., it is often used for installing software packages.
-* **CMD** sets default command and/or parameters, which can be overwritten from command line when docker container runs.
+* **CMD** sets default command and/or parameters, which can be overwritten from command line when `Docker` container runs.
 * **ENTRYPOINT** configures a container that will run as an executable.
 
 Crear un `Dockerfile` como base para la demo
@@ -16,7 +16,7 @@ USER root
 RUN apt update
 RUN apt install --yes software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt install --yes python3.7
+RUN apt install --yes python3.8
 
 CMD echo "Hello World"
 ENTRYPOINT echo "Hello World"
@@ -30,7 +30,7 @@ Construimos la imagen anterior
 docker build -t jaimesalas/run-cmd-entry .
 ```
 
-Si ejecutammos un contenedor a partir de la imagen anterior:
+Si ejecutamos un contenedor a partir de la imagen anterior:
 
 ```bash
 $ docker run --rm  -it jaimesalas/run-cmd-entry 
@@ -101,7 +101,7 @@ La variable de entorno no ha sido substituida.
 
 ### ¿Cómo ejecutar bash?
 
-Si necesitamos ejecutar `bash` o cualquier otro iterprete, usamos _exec form_ con `/bin/bash` como ejecutable. En este caso se realizará un proceso de `bash`.
+Si necesitamos ejecutar `bash` o cualquier otro interprete, usamos _exec form_ con `/bin/bash` como ejecutable. En este caso se realizará un proceso de `bash`.
 
 ```Dockerfile
 FROM ubuntu:20.04
@@ -138,7 +138,7 @@ La instrucción CMD permite establecer un comando por _defecto_, que será ejecu
 * CMD ["param1", "param2"] (sets additional default parameters for ENTRYPOINT in exec form)
 * CMD command param1 param2 (shell form)
 
-La primera y la tercera ya las hemos visto en acción. La segunda se utiliza junto con `ENTRYPOINT` en _exec form_. Establece valores por defecto que serán añadidos después de los parámetros de `ENTRYPOINT` si el contenedor se ejecuta sin argmentos en la línea de comandos.
+La primera y la tercera ya las hemos visto en acción. La segunda se utiliza junto con `ENTRYPOINT` en _exec form_. Establece valores por defecto que serán añadidos después de los parámetros de `ENTRYPOINT` si el contenedor se ejecuta sin argumentos en la línea de comandos.
 
 ```Dockerfile
 FROM ubuntu:20.04
@@ -174,7 +174,7 @@ root@248fd9d5a523:/#
 
 ### ENTRYPOINT Review
 
-`ENTRYPOINT` permite configurar un contenedor que se ejecutará coomo ejecutable. Se parece a CMD, porque también especificamos un comando con parametros. La diferencia es que la instrucción `ENTRYPOINT` y los parametros no son ignorados cuando Docker se ejecuta con argumentos de comando de línea.
+`ENTRYPOINT` permite configurar un contenedor que se ejecutará como ejecutable. Se parece a CMD, porque también especificamos un comando con parametros. La diferencia es que la instrucción `ENTRYPOINT` y los parametros no son ignorados cuando Docker se ejecuta con argumentos de comando de línea.
 
 > NOTA: Existe una manera de ignorarlo pero no se considera buena práctica.
 
@@ -229,4 +229,4 @@ Simplemente ignora cualquier CMD o comando de linea.
 
 ## Referencias
 
-Esta demo está extaraida del siguiente artículo: https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/
+Esta demo está extraida del siguiente artículo: https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/

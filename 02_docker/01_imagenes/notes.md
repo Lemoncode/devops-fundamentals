@@ -88,7 +88,7 @@ FROM node:6.17.0-stretch-slim
     - `RUN <commad>` (shell form)
     - `RUN ["executable", "param1", "param2"]` (exec form)
 
-La instrrucción `RUN` ejecutará cualquier comando en una nueva capa sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`. 
+La instrucción `RUN` ejecutará cualquier comando en una nueva capa sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`. 
 
 > Layering RUN instructions and generating commits conforms to the core concepts of Docker where commits are cheap and containers can be created from any point in an image’s history, much like source control.
 
@@ -161,7 +161,7 @@ WORKDIR c
 RUN pwd
 ```
 
-El resulatdo de `pwd` será `/a/b/c`
+El resultado de `pwd` será `/a/b/c`
 
 `WORKDIR` Puede resolver variables de entorno.
 
@@ -192,7 +192,7 @@ EXPOSE 80/udp
     - El _exec form_: `ENTRYPOINT ["executable", "param1", "param2"]`
     - El _shell form_: `ENTRYPOINT command param1 param2`
 
-`ENTRYPOINT` permite configurar un contenedor que se ejucatará como `executable` 
+`ENTRYPOINT` permite configurar un contenedor que se ejecutará como `executable` 
 
 ```Dockerfile
 ...
@@ -212,7 +212,7 @@ ENTRYPOINT python3 /opt/app/main.py
 
 * Sólo puede haber una instrucción `CMD` por `Dockerfile`. Si hay más de un `CMD`, sólo el último tomará efecto.
 
-> La _exec form_  es parseada como un array JSON, lo que signifcia que debemos usar `"` en vez `'`.
+> La _exec form_  es transformada como un array JSON, lo que significa que debemos usar `"` en vez `'`.
 
 ```Dockerfile
 ...
@@ -277,7 +277,7 @@ ARG arg2=default
 
 [SHELL reference](https://docs.docker.com/engine/reference/builder/#shell)
 
-Permite sobreescriber la shell por defecto. Debe ser escrita en formato _JSON_ en un `Dockerfile`.
+Permite sobrescribir la shell por defecto. Debe ser escrita en formato _JSON_ en un `Dockerfile`.
 
 ```Dockerfile
 ...
