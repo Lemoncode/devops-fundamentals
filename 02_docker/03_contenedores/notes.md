@@ -35,7 +35,7 @@ $ docker run -it fedora python3
 >>> os.system("cat /etc/*-release")
 ```
 
-> Para selir del terminal de Python: `ctrl + D` 
+> Para salir del terminal de Python: `ctrl + D` 
 
 Podemos, ejecutar nuestros contenedores en modo `detach`
 
@@ -172,7 +172,7 @@ $ docker run -d --rm -p 8080:8080 --cpus=1 --name myapp myapp
 $ docker inspect myapp
 ```
 
-¿Qué ocurrira si le intentamos dar más cpus que las que tiene el sistema actual?
+¿Qué ocurrirá si le intentamos dar más cpus que las que tiene el sistema actual?
 
 ```bash
 $ docker run -d --rm -p 8080:8080 --cpus=20 --name myapp myapp

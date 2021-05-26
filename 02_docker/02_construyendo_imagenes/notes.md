@@ -156,7 +156,7 @@ IMAGE               CREATED             CREATED BY                              
 <missing>           6 weeks ago         /bin/sh -c #(nop) ADD file:b91adb67b670d3a6f…   5.61MB        
 ```
 
-### Etiquetanso imágenes
+### Etiquetando imágenes
 
 ```bash
 $ docker tag myapp mynodeapp
