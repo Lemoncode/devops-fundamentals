@@ -6,7 +6,7 @@ Docker es una plataforma para desarrolladores y administradores de sistema para 
 
 ## Introducción a los Contenedores
 
-Aunque parezca increible, los contenedores y sus precursores llevan por aquí más de 15 años, en los sistemas operativos de Linux y Unix. Desde comienzos del 2000, ha habido intentos para encapsular la tecnología de contenedores para el usuario final:
+Aunque parezca increíble, los contenedores y sus precursores llevan por aquí más de 15 años, en los sistemas operativos de Linux y Unix. Desde comienzos del 2000, ha habido intentos para encapsular la tecnología de contenedores para el usuario final:
 
 * FreeBSD
 * Linux
@@ -25,13 +25,13 @@ En el año 2013, es cuando Docker da un vuelco al mercado haciendo que los conte
 
 ## ¿Qué es un contenedor?
 
-La encapsulación, del paradigma del conetenedor, que realiza Docker representa una implementación moderna del aislamiento de recursos que utiliza características del Kernel de Linux, tales como chroot, **control groups (cgroups)**, UninonFS y namespaces para aislar completamente el control del recurso a nivel de proceso.
+La encapsulación, del paradigma del contenedor, que realiza Docker representa una implementación moderna del aislamiento de recursos que utiliza características del Kernel de Linux, tales como chroot, **control groups (cgroups)**, UninonFS y namespaces para aislar completamente el control del recurso a nivel de proceso.
 
-Los contenedores usan las tecnologías anteriormente citadas para crear imágenes ligeras, que actúan de manera independiente, encapsualndo completamente un trozo de software que lleva todo lo que necesita dentro de su propia caja. Esto puede incluir los binarios de una aplicación, cualquier herramienta del sistema o librerías, configuración basada en el entorno de ejecución, y las intrucciones necesarias para su ejecución. 
+Los contenedores usan las tecnologías anteriormente citadas para crear imágenes ligeras, que actúan de manera independiente, encapsulando completamente un trozo de software que lleva todo lo que necesita dentro de su propia caja. Esto puede incluir los binarios de una aplicación, cualquier herramienta del sistema o librerías, configuración basada en el entorno de ejecución, y las instrucciones necesarias para su ejecución. 
 
 Esta propiedad tan importante, que es el aislamiento, permite a los desarrolladores y operadores, liberar la naturaleza de todo en uno de los contenedores para ejecutar sin problemas, sin importar el entorno en el que se están ejecutando. Esto incluye desde mi máquina hasta cualquier servidor de producción.
 
-Este desacoplamineto de empaquetado de aplicaión del entorno en el cuál se va a ejecutar es un concepto poderoso que provee una clara separación de responsabilidades. Permite a los desarrolladores centrarse en construir la aplicación del código y gestionar sus propias dependencias, mientras que los operadores pueden delimitar la integración continua, y despliegue sin tenerse que preocupar  por su configuración.
+Este desacoplamiento de empaquetado de aplicaión del entorno en el cuál se va a ejecutar es un concepto poderoso que provee una clara separación de responsabilidades. Permite a los desarrolladores centrarse en construir la aplicación del código y gestionar sus propias dependencias, mientras que los operadores pueden delimitar la integración continua, y despliegue sin tenerse que preocupar  por su configuración.
 
 * En el corazón de la tecnología de contenedores existen 3 piezas clave:
     - cgroups
@@ -40,7 +40,7 @@ Este desacoplamineto de empaquetado de aplicaión del entorno en el cuál se va 
 
 ### cgroups
 
-Los `cgroups` trabajan permitiendo al `host` compartir y limitar los recursos a cada proceso o contenedor que puedan consumir. Muchos contenedores pueden compartir CPU y memoria mientras que se mantengan en las restricciones predefinidas. Los `cgroups` permiten a los contenedores provisionar acceso a memoria, acceso a disco I/O, red, y CPU. Se puede incluso acceder a dispostivos. 
+Los `cgroups` trabajan permitiendo al `host` compartir y limitar los recursos a cada proceso o contenedor que puedan consumir. Muchos contenedores pueden compartir CPU y memoria mientras que se mantengan en las restricciones predefinidas. Los `cgroups` permiten a los contenedores provisionar acceso a memoria, acceso a disco I/O, red, y CPU. Se puede incluso acceder a dispositivos. 
 
 * Los `cgroups` más relevantes:
     - **Memory cgroup**: This keeps track of page access by the group, and can define limits for physical, kernel, and total memory.
@@ -59,7 +59,7 @@ Los `cgroups` trabajan permitiendo al `host` compartir y limitar los recursos a 
 
 ### Namespaces
 
-Los `namespaces` ofrecen una nueva forma de aislamiento para al interacción del proceso con los sistemas operativos, creando el `workspace` llamamos a un contenedor. `Linux namespaces` son creados via una `syscall` llamada _unshare_, mientras que _clone_ y _setns_ permite manipular los `namespaces` de otras maneras.
+Los `namespaces` ofrecen una nueva forma de aislamiento para la interacción del proceso con los sistemas operativos, creando el `workspace` llamamos a un contenedor. `Linux namespaces` son creados via una `syscall` llamada _unshare_, mientras que _clone_ y _setns_ permite manipular los `namespaces` de otras maneras.
 
 > *unshare()* allows a process (or thread) to disassociate parts of its execution context that are currently being shared with other processes (or threads). Part of the execution context, such as the mount namespace, is shared implicitly when a new process is created using FORK(2) (for more information visit http://man7.org/linux/man-pages/man2/fork.2.html) or VFORK(2) (for more information visit http://man7.org/linux/man-pages/man2/vfork.2.html), while other parts, such as virtual memory, may be shared by explicit request when creating a process or thread using CLONE(2) (for more information visit http://man7.org/linux/man-pages/man2/clone.2.html).
 
