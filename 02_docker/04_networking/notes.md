@@ -89,7 +89,7 @@ $ docker run -d --network=host --name myapp myapp
 docker network inspect host
 ```
 
-No existe aislamineto desde un punto de vista de la red. Los puertos expuestos están directamente enlazados al `host`.
+No existe aislamiento desde un punto de vista de la red. Los puertos expuestos están directamente enlazados al `host`.
 
 ### None
 
