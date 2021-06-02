@@ -3,6 +3,7 @@ import time
 import redis
 from flask import Flask
 
+# https://stackoverflow.com/questions/39393926/flaskapplication-versus-flask-name
 app = Flask(__name__)
 cache = redis.Redis(host='redis', port=6379)
 
