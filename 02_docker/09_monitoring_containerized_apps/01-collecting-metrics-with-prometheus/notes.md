@@ -1,6 +1,6 @@
 ## Introducción
 
-Un servidor de métricas es un punto central para recolecatr y almacenar datos de monitorización en las aplicaciones contenerizadas. `Prometheus` es el servidor de métricas más popular.
+Un servidor de métricas es un punto central para recolectar y almacenar datos de monitorización en las aplicaciones contenerizadas. `Prometheus` es el servidor de métricas más popular.
 
 * Open source
 * cross-platform
@@ -8,11 +8,11 @@ Un servidor de métricas es un punto central para recolecatr y almacenar datos d
 
 ## Usando un contenedor para ejecutar Prometheus
 
-`Prometheus` en una aplicación escriat en `GO`, lo que la convierta en ligera y `cross-platform`. `Prometheus` se puede ejecutar directamente en un servidor en tu cluster o en un servidor separado dentro de tu network, además de poderse ejecutar como un contenedor junto con otras aplicaciones contenerizadas.
+`Prometheus` en una aplicación escrita en `GO`, lo que la convierta en ligera y `cross-platform`. `Prometheus` se puede ejecutar directamente en un servidor en tu cluster o en un servidor separado dentro de tu network, además de poderse ejecutar como un contenedor junto con otras aplicaciones contenerizadas.
 
-Recordar que los contenedores en la misma red de `Docker` pueden acceder entre ellos, sin que sus puertos sean expuestos al mundo exterior. Por lo que cuando ejecutamos `Prometheus` como un conetenedor, podemos mantener los `end points` de métricas de manera privada. Podemos incluso hacer lo mismo con el propio `Prometheus` ya que este sólo necesita ser accedido mediante `Grafana`
+Recordar que los contenedores en la misma red de `Docker` pueden acceder entre ellos, sin que sus puertos sean expuestos al mundo exterior. Por lo que cuando ejecutamos `Prometheus` como un contenedor, podemos mantener los `end points` de métricas de manera privada. Podemos incluso hacer lo mismo con el propio `Prometheus` ya que este sólo necesita ser accedido mediante `Grafana`
 
-`Prometheus` es fácilmente configurable para extraer la información de componentes que estén correindo wn múltiples contenedores replicados, ya que `Docker` provee `service discovery`. `Prometheus` necesita almacenar los datos que recopila, para aplicaiones pequeñas, usar un volumen dentro de la red puede estar bien, pero para aplicaciones más grandes se necesitara escalar en un cluster.
+`Prometheus` es fácilmente configurable para extraer la información de componentes que estén corriendo wn múltiples contenedores replicados, ya que `Docker` provee de `service discovery`. `Prometheus` necesita almacenar los datos que recopila, para aplicaiones pequeñas, usar un volumen dentro de la red puede estar bien, pero para aplicaciones más grandes se necesitara escalar en un cluster.
 
 ## Demo: Running Prometheus in Docker
 
@@ -44,7 +44,7 @@ CONTAINER ID        IMAGE                     COMMAND                  CREATED  
 45dfcdfa2ace        prom/prometheus:v2.20.1   "/bin/prometheus --c…"   6 seconds ago       Up 5 seconds        0.0.0.0:32768->9090/tcp   prometheus
 ```
 
-Este contenedor está ejecutando el setup de Prometheus por defecto que no tienen **ningún job asociado**. Pero si ejecutamos `curl localhost:32768/metrics` podemos ver las metricas que expone `Prometheus`.
+Este contenedor está ejecutando el setup de Prometheus por defecto que no tienen **ningún job asociado**. Pero si ejecutamos `curl localhost:32768/metrics` podemos ver las métricas que expone `Prometheus`.
 
 ## Configuración y Service Discovery con Prometheus
 
@@ -88,7 +88,14 @@ Tenemos que editar este fichero `~/.docker/daemon.json` **Docker daemon**, para 
 }
 ```
 
-Now we can add a job to scrap Docker 
+Create `/prometheus/Dockerfile`
+
+```Dockerfile
+FROM prom/prometheus:v2.3.1
+COPY prometheus.yml /etc/prometheus/prometheus.yml
+```
+
+Now we can add a job to scrap Docker, create `/prometheus/prometheus.yml`
 
 ```yml
  - job_name: 'docker'
@@ -99,10 +106,52 @@ Now we can add a job to scrap Docker
       - targets: ['docker.for.mac.host.internal:9323']
 ```
 
+Create `node` directory, and:
+
+```bash
+cd node
+$ npm init -y
+$ npm i express
+```
+
+Create `node/index.js`
+
+```js
+const express = require('express');
+const app = express();
+const port = 3000;
+const host = '0.0.0.0';
+
+app.get('/alerts', (req, res) => {
+    res.json([{ id: 1, title: 'Hola' }, { id: 2, title: 'Adios' }]);
+});
+
+app.listen(port, host, () => {
+    console.log(`app listening on http://${host}:${port}`);
+});
+```
+
+Create `Dockerfile`
+
+```Dockerfile
+FROM node:12
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm ci --only=production
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+```
+
+
 From node folder, we have built a new Docker image
 
 ```bash
-$ docker build -t aimesalas/node-web-app:0.0.1 .
+$ docker build -t jaimesalas/node-web-app:0.0.1 .
 ```
 
 Create a config file for Prometheus _./prometheus/prometheus.yml_
@@ -144,7 +193,7 @@ $ docker build -t jaimesalas/prometheus-test:0.0.1 .
 Now we can create a custom Docker network as follows:
 
 ```bash
-$ docker nnetwork create -d bridge internal-network
+$ docker network create -d bridge internal-network
 ```
 
 Start our containers adding to that network
