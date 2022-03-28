@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Dani Garcia",
+        "restaurants": [
+            {
+                "name": "Lobito de Mar",
+                "dishes": [
+                    {
+                        "name":"TARTAR DE ATÚN",
+                        "price":"15.00"
+                    },
+                    {
+                        "name":"CARPACCIO DE CHULETÓN DE ATÚN",
+                        "price":"22.00"
+                    },
+                    {
+                        "name":"CARPACCIO DE CHULETÓN DE ATÚN CON HUEVOS FRITOS AL AJILLO",
+                        "price":"24.00"
+                    },
+                    {
+                        "name":"TARTAR DE DESCARGAMENTO DE ATÚN",
+                        "price":"24.00"
+                    },
+                    {
+                        "name":"Ventresca y descargamento",
+                        "price":"25.00"
+                    }
+                ]
+            }
+        ]
+    }
+]

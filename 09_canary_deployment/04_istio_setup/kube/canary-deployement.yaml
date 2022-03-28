@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: stuff
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - math-gateway
+  http:
+    - route:
+        - destination:
+            host: math

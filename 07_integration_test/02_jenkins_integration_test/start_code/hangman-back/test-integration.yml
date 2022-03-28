@@ -1,0 +1,64 @@
+version: "3.8"
+
+networks:
+  integration-tests:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:10.4
+    container_name: postgres
+    volumes:
+      - ./database/hangman_database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - integration-tests
+
+  seed:
+    container_name: seed
+    build:
+      context: .
+      dockerfile: Dockerfile.migrations
+    environment:
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      DATABASE_NAME: hangman_db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_POOL_MIN: 2
+      DATABASE_POOL_MAX: 10
+    depends_on:
+      - postgres
+    command:
+      [
+        "./wait-for-it.sh",
+        "postgres:5432",
+        "--strict",
+        "--timeout=300",
+        "--",
+        "./node_modules/knex/bin/cli.js",
+        "migrate:latest",
+      ]
+    networks:
+      - integration-tests
+
+  test-integration:
+    container_name: test-integration
+    build:
+      context: .
+      dockerfile: Dockerfile.test-integration
+    environment:
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      DATABASE_NAME: hangman_db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_POOL_MIN: 2
+      DATABASE_POOL_MAX: 10
+    depends_on:
+      - postgres
+      - seed
+    networks:
+      - integration-tests
+    
+
+    

@@ -1,0 +1,87 @@
+Vagrant.configure("2") do |config|
+    config.vm.provision "shell", inline: $update_system
+    config.vm.provision :docker
+    config.vm.provision "shell", inline: $hosts_setup
+  
+    config.vm.define "jenkins" do |jenkins|
+      jenkins.vm.box = "ubuntu/focal64"
+      jenkins.vm.hostname = "jenkins.intranet"
+      jenkins.vm.network "private_network", ip: "172.16.43.100"
+      jenkins.vm.network "forwarded_port", guest: 8080, host: 8080
+      jenkins.vm.synced_folder ".", "/vagrant", disabled: true
+      jenkins.vm.provision "shell", inline: $jenkins_setup
+  
+      jenkins.vm.provider "virtualbox" do |vb|
+        vb.customize [ "modifyvm", :id, "--uartmode1", "file", "/dev/null" ]
+        vb.name = "jenkins"
+        vb.memory = 2048
+      end
+    end
+  
+    config.vm.define "registry" do |registry|
+      registry.vm.box = "ubuntu/focal64"
+      registry.vm.hostname = "registry.intranet"
+      registry.vm.network "private_network", ip: "172.16.43.101"
+      registry.vm.synced_folder ".", "/vagrant", disabled: true
+  
+      registry.vm.provider "virtualbox" do |vb|
+        vb.customize [ "modifyvm", :id, "--uartmode1", "file", "/dev/null" ]
+        vb.name = "registry"
+        vb.memory = 2048
+      end
+    end
+  end
+  
+  $hosts_setup = <<~SCRIPT
+    set -e
+    echo "[HOST FILE SETUP]"
+  
+    echo "[TASK 1] -- Set up jenkins name resolution"
+    echo "172.16.43.100       jenkins jenkins.intranet" >> /etc/hosts
+  
+    echo "[TASK 2] -- Set up registy name resolution"
+    echo "172.16.43.101       registry registry.intranet" >> /etc/hosts
+  SCRIPT
+  
+  $update_system = <<~SCRIPT
+    set -e
+    echo "[UPDATE SYSTEM]"
+    export DEBIAN_FRONTEND=noninteractive
+  
+    echo "[TASK 1] -- Syncing repos"
+    apt-get update &>/dev/null
+  
+    echo "[TASK 2] -- Updating packages"
+    apt-get upgrade -y &>/dev/null
+  SCRIPT
+  
+  $jenkins_setup = <<~SCRIPT
+    set -e
+  
+    echo "[INSTALL JENKINS]"
+  
+    echo "[TASK 1] -- Adding apt-keys"
+    wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add - &>/dev/null
+    echo "deb https://pkg.jenkins.io/debian-stable binary/" > /etc/apt/sources.list.d/jenkins.list
+  
+    echo "[TASK 2] -- Syncing repos"
+    apt-get update &>/dev/null
+  
+    echo "[TASK 3] -- Installing Jenkins dependencies"
+    apt-get -y install default-jre default-jdk git git-ftp &>/dev/null
+  
+    echo "[TASK 4] -- Installing jenkins"
+    apt-get -y install jenkins &>/dev/null
+    systemctl enable jenkins &>/dev/null
+    systemctl start jenkins &>/dev/null
+  
+    JENKINS_INITIAL_PASSWORDD_FILE="/var/lib/jenkins/secrets/initialAdminPassword"
+  
+    echo "[TASK 5] -- Wait for Jenkin's initialAdminPassword file to be created"
+    while ! test -f "$JENKINS_INITIAL_PASSWORDD_FILE"; do sleep 1; done
+  
+    echo "------------------------------------"
+    echo "Jenkins initialAdminPassword:\t$(cat $JENKINS_INITIAL_PASSWORDD_FILE)"
+    echo "------------------------------------"
+  SCRIPT
+  

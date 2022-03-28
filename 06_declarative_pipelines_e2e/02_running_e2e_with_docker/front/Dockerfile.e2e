@@ -1,0 +1,9 @@
+FROM cypress/base:10
+
+COPY . .
+
+RUN npm install
+
+RUN npm install cypress
+
+RUN $(npm bin)/cypress verify

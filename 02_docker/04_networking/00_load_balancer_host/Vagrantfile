@@ -1,0 +1,23 @@
+$script = <<-SCRIPT
+# Install apache2-utils
+apt-get update
+apt-get install -y apache2-utils
+SCRIPT
+
+
+Vagrant.configure("2") do |config|
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 8192
+      v.cpus = 2
+    end
+    
+    config.vm.box = "bento/ubuntu-20.04"
+    
+    config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
+    config.vm.network "private_network", ip: "10.0.0.200"
+
+    config.vm.provision "docker"
+    config.vm.provision "shell", inline: $script
+
+    config.vm.provision "file", source: "~/Documents/trainings/devops-fundamentals/02_docker/04_networking/00_load_balancer_host/code", destination: "$HOME/app"
+  end

@@ -1,0 +1,9 @@
+FROM node:latest
+
+WORKDIR /opt/app
+
+COPY . .
+
+RUN npm install --only=production
+
+CMD ["npm", "start"]

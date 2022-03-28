@@ -1,0 +1,27 @@
+FROM node:14.15.4-buster
+
+WORKDIR /opt/app
+
+COPY ./db/migrations ./db/migrations
+
+COPY ./knexfile.js ./knexfile.js
+
+COPY ./wait-for-it.sh ./wait-for-it.sh
+RUN chmod +x wait-for-it.sh
+
+RUN npm init -y 
+
+RUN npm install knex pg dotenv
+
+# WORKDIR /opt/app
+
+# COPY . . 
+
+# ARG MATRUX_VERSION=v1
+
+# RUN npm install
+
+# RUN npm run build
+
+# FROM scratch AS export-stage 
+# COPY --from=builder /opt/app/dist/*.js ./

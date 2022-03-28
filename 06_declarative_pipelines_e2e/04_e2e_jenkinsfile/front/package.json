@@ -1,0 +1,32 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode development",
+    "cypress": "cypress open",
+    "cy:run:env": "cypress run --env api_url=http://e2e-back:4000/scores",
+    "cy:run": "cypress run",
+    "test:e2e:local": "start-server-and-test start http://localhost:8081 cy:run",
+    "test:e2e": "start-server-and-test start http://localhost:8081 cy:run:env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "axios": "^0.21.0",
+    "babel-loader": "^8.2.1",
+    "cypress": "5.5.0",
+    "dotenv-webpack": "^5.1.0",
+    "start-server-and-test": "^1.11.5",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
