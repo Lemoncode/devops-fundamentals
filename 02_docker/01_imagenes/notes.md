@@ -9,7 +9,7 @@ El Docker registry por defecto. Para ejecutar un contenedor, necesitamos una ima
 ### Docker Pull
 
 ```bash
-$ docker pull ubuntu
+docker pull ubuntu
 ```
 
 El comando anterior recuperará la imagen de Docker Hub, el `registry` por defecto.
@@ -17,11 +17,11 @@ El comando anterior recuperará la imagen de Docker Hub, el `registry` por defec
 ### Docker images
 
 ```bash
-$ docker images
+docker images
 ```
 
 ```bash
-$ docker image ls
+docker image ls
 ```
 
 Listamos las imágenes que tenemos en nuestro local.
