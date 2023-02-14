@@ -33,7 +33,10 @@ docker build -t jaimesalas/run-cmd-entry .
 Si ejecutammos un contenedor a partir de la imagen anterior:
 
 ```bash
-$ docker run --rm  -it jaimesalas/run-cmd-entry 
+docker run --rm  -it jaimesalas/run-cmd-entry 
+```
+
+```
 Hello World
 ```
 
@@ -58,9 +61,10 @@ CMD echo "Hello World"
 ```
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
+docker build -t jaimesalas/run-cmd-entry .
 ...
-$ docker run --rm  -it jaimesalas/run-cmd-entry 
+docker run --rm  -it jaimesalas/run-cmd-entry 
+...
 Hello, Jon Snow
 ```
 
@@ -91,9 +95,9 @@ ENTRYPOINT ["/bin/echo", "Hello, ${name}"]
 Ahora procedemos a construir la imagen y ejecutar el contenedor. Notar que la instalación ahora genera nuevas layers.
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
+docker build -t jaimesalas/run-cmd-entry .
 ...
-$ docker run --rm  -it jaimesalas/run-cmd-entry 
+docker run --rm  -it jaimesalas/run-cmd-entry 
 Hello, ${name} /bin/echo Hello World
 ```
 
@@ -124,9 +128,9 @@ ENTRYPOINT ["/bin/bash", "-c", "echo Hello, ${name}"]
 Si construimos y ejecutamos la imagen, obtenemos:
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
+docker build -t jaimesalas/run-cmd-entry .
 ...
-$ docker run --rm  -it jaimesalas/run-cmd-entry 
+docker run --rm  -it jaimesalas/run-cmd-entry 
 Hello, Jon Snow
 ```
 
@@ -157,18 +161,16 @@ CMD echo "Hello World"
 Si construimos y ejecutamos la imagen, obtenemos:
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
+docker build -t jaimesalas/run-cmd-entry .
 ...
-$ docker run --rm  -it jaimesalas/run-cmd-entry 
+docker run --rm  -it jaimesalas/run-cmd-entry 
 Hello World
 ```
 
 Pero cuando ejecutamos el contenedor con un comando determinado obtenemos:
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
-...
-$ docker run --rm  -it jaimesalas/run-cmd-entry  /bin/bash
+docker run --rm  -it jaimesalas/run-cmd-entry  /bin/bash
 root@248fd9d5a523:/#
 ```
 
@@ -204,16 +206,16 @@ Cuando ejecutamos el contenedor obtenemos la siguiente salida:
 
 
 ```bash
-$ docker build -t jaimesalas/run-cmd-entry .
+docker build -t jaimesalas/run-cmd-entry .
 ...
-$ docker run --rm  -it jaimesalas/run-cmd-entry
+docker run --rm  -it jaimesalas/run-cmd-entry
 Hello World
 ```
 
 Pero cuando le pasamos `Jon` desde la consola:
 
 ```bash
-$ docker run --rm  -it jaimesalas/run-cmd-entry Jon
+docker run --rm  -it jaimesalas/run-cmd-entry Jon
 Hello Jon
 ```
 
