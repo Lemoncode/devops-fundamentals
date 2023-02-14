@@ -12,7 +12,7 @@ Mientras `bind mounts` son dependientes de la estructura de directorios y OS del
 * Los nuevos volumenes pueden ser inicializados por un contenedor. 
 * Los `volumes` en `Docker Desktop` tienen mucha mejor performance que `bind mounts`, tanto en Mac como en Windows.
 
-Los `volumes` suelen ser una mejor opción que persistir el `data` en la capa de escritura de un contenedor, porque sl volumen no aumenta el tamaño del contenedor que lo usa, y el conetnido del volumen esta fuera del ciclo de vida del contenedor.
+Los `volumes` suelen ser una mejor opción que persistir el `data` en la capa de escritura de un contenedor, porque sl volumen no aumenta el tamaño del contenedor que lo usa, y el contenido del volumen esta fuera del ciclo de vida del contenedor.
 
 ### Choose the -v or --mount flag
 
@@ -41,19 +41,19 @@ Al contrario de `bind mounts`, todas las opciones de `volume` están disponibles
 #### Create a volume 
 
 ```bash
-$ docker volume create test-vol
+docker volume create test-vol
 ```
 
 #### List volumes
 
 ```bash
-$ docker volume ls 
+docker volume ls 
 ```
 
 #### Inspect a volume:
 
 ```bash
-$ docker volume inspect test-vol
+docker volume inspect test-vol
 [
     {
         "CreatedAt": "2020-11-11T09:43:37Z",
@@ -70,7 +70,7 @@ $ docker volume inspect test-vol
 #### Remove a volume:
 
 ```bash
-$ docker volume rm test-vol
+docker volume rm test-vol
 ```
 
 ## Start a container with a volume
@@ -79,7 +79,7 @@ Si arranacas un contenedor con un `volume` que todavía no existe, `Docker` crea
 
 ```bash
 # mount syntax
-$ docker run -d \
+docker run -d \
   --name mynginx \
   --mount source=myvol,target=/app \
   nginx:latest
@@ -87,14 +87,14 @@ $ docker run -d \
 
 ```bash
 # -v syntax
-$ docker run -d \
+docker run -d \
   --name mynginx \
   -v myvol:/app \
   nginx:latest
 ```
 
 ```bash
-$ docker inspect mynginx
+docker inspect mynginx
 "Mounts": [
             {
                 "Type": "volume",
@@ -117,7 +117,7 @@ Por ejemplo, podemos hacer esto:
 
 ```bash
 # mount
-$ docker run -d \
+docker run -d \
   --name=nginxtest \
   --mount source=nginx-vol,destination=/usr/share/nginx/html \
   nginx:latest
@@ -125,7 +125,7 @@ $ docker run -d \
 
 ```bash
 # -v
-$ docker run -d \
+docker run -d \
   --name=nginxtest \
   -v nginx-vol:/usr/share/nginx/html \
   nginx:latest
@@ -134,7 +134,10 @@ $ docker run -d \
 Ahora que tenemos un contenedor que carga un `volume`, vamos a comprobar que tenemos acceso desde otro contenedor
 
 ```bash
-$ docker run -v nginx-vol:/usr -it busybox
+docker run -v nginx-vol:/usr -it busybox
+```
+
+```bash
 Unable to find image 'busybox:latest' locally
 latest: Pulling from library/busybox
 9758c28807f2: Pull complete 
@@ -153,7 +156,7 @@ Para el desarrollo de algunas aplicacione, el contenedor necesita escribir en el
 
 ```bash
 # mount
-$ docker run -d \
+docker run -d \
   --name=nginxtest \
   --mount source=nginx-vol,destination=/usr/share/nginx/html,readonly \
   nginx:latest
@@ -161,14 +164,14 @@ $ docker run -d \
 
 ```bash
 # -v
-$ docker run -d \
+docker run -d \
   --name=nginxtest \
   -v nginx-vol:/usr/share/nginx/html:ro \
   nginx:latest
 ```
 
 ```bash
-$ docker inspect nginxtest
+docker inspect nginxtest
 "Mounts": [
     {
         "Type": "volume",
@@ -185,7 +188,6 @@ $ docker inspect nginxtest
 
 ## Backup, restore, or migrate data volumes
 
-
 Los `volume` son útiles para `backups`, `restore` y migraciones. Usamos el flag `--volumes-from` para crear un nuevo contenedor que monte ese volumen.
 
 Esto abre una puerta interesante, porque podemos especificar un `path` en el `host` donde podemos poner algunos ficheros, así cuando el contenedor arrancque y el `volume` es inicializado, el contenedor va a tener esos ficheros.
@@ -196,7 +198,7 @@ Esto abre una puerta interesante, porque podemos especificar un `path` en el `ho
 
 Cuando usamos __bind mount__, un __fichero o directorio del host es montado en el contenedor__. El fichero o directorio es referenciado por su __path absoluto en la máquina host__. Por otro lado, cuando usas un `volume`, un nuevo directorio es creado dentro del directorio de almacenamiento de Docker en la máquina host, y Docker gestiona el contenido del directorio.
 
-El fichero o directorio no necesiat existir en el `Docker host`. Es creado bajo demanda si todavía no existe. `Bind mounts` tienen muy buena `performance`, pero se asientan el `host filesystem` teniendo una etructura de directorios específica. Si estamos generando nuevas aplicaciones con Docker, consideremos usar `named volumes` en su lugar. No se pueden usar comandos de Docker CLI para gestionar `bind mounst`.
+El fichero o directorio no necesita existir en el `Docker host`. Es creado bajo demanda si todavía no existe. `Bind mounts` tienen muy buena `performance`, pero se asientan el `host filesystem` teniendo una etructura de directorios específica. Si estamos generando nuevas aplicaciones con Docker, consideremos usar `named volumes` en su lugar. No se pueden usar comandos de Docker CLI para gestionar `bind mounst`.
 
 ### Choose the -v or --mount flag
 
