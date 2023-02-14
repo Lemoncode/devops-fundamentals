@@ -3,11 +3,11 @@
 Vamos a empaquetar una aplicación sencilla de NodeJS
 
 ```bash
-$ npm init -y
+npm init -y
 ```
 
 ```bash
-$ npm i express
+npm i express
 ```
 
 Nuestro `package.json` debería verse una cosa como esta:
@@ -78,13 +78,16 @@ npm-debug.log
 Ahora podemos lanzar la petición a Docker para que construya la siguiente imagen. 
 
 ```bash
-$ docker build -t myapp .
+docker build -t myapp .
 ```
 
 La instrucción anterior construirá mi imagen desde el _Dockerfile_ y le pondrá la etiqueta de _myapp_
 
 ```bash
-$ docker build -t myapp .
+docker build -t myapp .
+```
+
+```
 Sending build context to Docker daemon  20.99kB
 Step 1/7 : FROM node:alpine
 alpine: Pulling from library/node
@@ -129,15 +132,18 @@ Successfully tagged myapp:latest
 ### Comprobando Imágenes
 
 ```bash
-$ docker image ls
+docker image ls
 ```
 
 ```bash
-$ docker history <image name or id>
+docker history <image name or id>
 ```
 
 ```bash
-$ docker history myapp
+docker history myapp
+```
+
+```
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
 27bbca364cad        7 minutes ago       /bin/sh -c #(nop)  CMD ["npm" "start"]          0B                  
 2a51d1c6bf42        7 minutes ago       /bin/sh -c #(nop)  EXPOSE 8080                  0B                  
@@ -159,13 +165,13 @@ IMAGE               CREATED             CREATED BY                              
 ### Etiquetanso imágenes
 
 ```bash
-$ docker tag myapp mynodeapp
-$ docker tag myapp mynodeapp:1
-$ docker tag myapp myorganization/myapp:1
+docker tag myapp mynodeapp
+docker tag myapp mynodeapp:1
+docker tag myapp myorganization/myapp:1
 ```
 
 ### Eliminando Imágenes
 
 ```bash
-$ docker rmi mynodeapp:1
+docker rmi mynodeapp:1
 ```
