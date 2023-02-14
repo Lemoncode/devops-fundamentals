@@ -1,7 +1,7 @@
 ## Networking
 
 ```bash
-$ ifconfig
+ifconfig
 ```
 
 ```bash
@@ -17,7 +17,10 @@ docker0
 ```
 
 ```bash
-$ docker network ls
+docker network ls
+```
+
+```
 NETWORK ID          NAME                DRIVER              SCOPE
 b2ecc5e33156        bridge              bridge              local
 c03a10652aad        daemon_network      bridge              local
@@ -30,8 +33,11 @@ b4d1a5fa0f19        none                null                local
 Este el network driver por defecto
 
 ```bash
-$ docker run -d -p 8080:8080 --net=bridge --name myapp myapp
-$ docker network inspect bridge
+docker run -d -p 8080:8080 --net=bridge --name myapp myapp
+```
+
+```
+docker network inspect bridge
 ```
 
 ```
@@ -85,7 +91,10 @@ $ docker network inspect bridge
 ### Host
 
 ```bash
-$ docker run -d --network=host --name myapp myapp
+docker run -d --network=host --name myapp myapp
+```
+
+```
 docker network inspect host
 ```
 
@@ -96,7 +105,7 @@ No existe aislamineto desde un punto de vista de la red. Los puertos expuestos e
 No existe interfaz de red.
 
 ```bash
-$ docker network inspect none
+docker network inspect none
 ```
 
 [Demo load balancer host](04_networking/00_load_balancer_host)
@@ -106,13 +115,13 @@ $ docker network inspect none
 Siempre podemos crear nuestras propias redes.
 
 ```bash
-$ docker network create --driver=bridge \
+docker network create --driver=bridge \
 --subnet=172.100.1.0/24 --gateway=172.100.1.1 \
 --ip-range=172.100.1.2/25 mybridge
 ```
 
 ```bash
-$ docker network ls
+docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
 b2ecc5e33156        bridge              bridge              local
 c03a10652aad        daemon_network      bridge              local
@@ -122,7 +131,7 @@ b4d1a5fa0f19        none                null                local
 ```
 
 ```bash
-$ docker network inspect mybridge
+docker network inspect mybridge
 [
     {
         "Name": "mybridge",
@@ -157,3 +166,8 @@ $ docker network inspect mybridge
 ```
 
 [Demo load balancer user defined network](04_networking/01_load_balancer_user_defined_network)
+
+## References
+
+- [Explore networking features](https://docs.docker.com/desktop/networking/)
+- [Host Networking](https://docs.docker.com/desktop/networking/)
