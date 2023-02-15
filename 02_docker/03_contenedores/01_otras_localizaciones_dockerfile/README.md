@@ -35,9 +35,9 @@ CMD ["npm", "start"]
 Ahora para construir nuestras imágenes:
 
 ```bash
-$ docker build -f dockerfiles/Dockerfile.other -t myotherapp .
+docker build -f dockerfiles/Dockerfile.other -t myotherapp .
 ```
 
 ```bash
-$ docker run -d --rm -p 8080:8080 --name myotherapp myotherapp
+docker run -d --rm -p 8080:8080 --name myotherapp myotherapp
 ```

@@ -26,8 +26,9 @@ Podemos ejecutar los contenedores en un modo interactivo, `stdin`, `stdout` y `s
 docker run -it fedora bash
 ```
 
-```
-$ cat /etc/*-release
+```bash
+# from inside container 
+cat /etc/*-release
 ```
 
 ```bash
@@ -39,7 +40,7 @@ docker run -it fedora python3
 >>> os.system("cat /etc/*-release")
 ```
 
-> Para selir del terminal de Python: `ctrl + D` 
+> Para salir del terminal de Python: `ctrl + D` 
 
 Podemos, ejecutar nuestros contenedores en modo `detach`
 

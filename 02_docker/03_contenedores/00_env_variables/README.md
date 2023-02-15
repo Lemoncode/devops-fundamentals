@@ -75,13 +75,13 @@ node_modules
 Construimos nuestra imagen
 
 ```bash
-$ docker build -t myapp .
+docker build -t myapp .
 ```
 
 Ahora podemos ejecutar el contenedor, y alimentar varaibles de entorno de la siguiente manera:
 
 ```bash
-$ docker run -e MESSAGE=hello -p 8080:8080 --name myapp myapp
+docker run -e MESSAGE=hello -p 8080:8080 --name myapp myapp
 
 > env_variables_demo@1.0.0 start /opt/app
 > node index.js
@@ -94,11 +94,11 @@ En este comando en ejecución podemos acceder y ejecutar comandos:
 
 
 ```bash
-$ docker exec -it myapp bash
+docker exec -it myapp bash
 ```
 
 Abrir otro terminal y ejecutar: 
 
 ```bash
-$ docker exec -it myapp touch example.txt
+docker exec -it myapp touch example.txt
 ```
