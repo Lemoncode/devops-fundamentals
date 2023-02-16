@@ -3,11 +3,11 @@
 ### Code
 
 ```bash
-$ npm init -y
+npm init -y
 ```
 
 ```bash
-$ npm install express
+npm install express
 ```
 
 Crear `index.js`
@@ -111,7 +111,7 @@ ADD ./nginx.conf /etc/nginx
 Primero creamos una nueva red.
 
 ```bash
-$ docker network create --driver=bridge \
+docker network create --driver=bridge \
 --subnet=172.100.1.0/24 --gateway=172.100.1.1 \
 --ip-range=172.100.1.2/25 mybridge
 ```
@@ -119,21 +119,21 @@ $ docker network create --driver=bridge \
 Generamos una nueva build de myapp
 
 ```bash
-$ docker build -t myapp .
+docker build -t myapp .
 ```
 
 Ahora vamos a ejecutar múltiples contenedores en la _network_
 
 ```bash
-$ docker run -d --rm --net=mybridge -e INSTANCE=myapp1 --name myapp1 myapp
-$ docker run -d --rm --net=mybridge -e INSTANCE=myapp2 --name myapp2 myapp
-$ docker run -d --rm --net=mybridge -e INSTANCE=myapp3 --name myapp3 myapp
+docker run -d --rm --net=mybridge -e INSTANCE=myapp1 --name myapp1 myapp
+docker run -d --rm --net=mybridge -e INSTANCE=myapp2 --name myapp2 myapp
+docker run -d --rm --net=mybridge -e INSTANCE=myapp3 --name myapp3 myapp
 ```
 
 Si inspeccionamos la red `mybridge`
 
 ```bash
-$ docker network inspect mybridge
+docker network inspect mybridge
 ...
 "Containers": {
             "1981383f2b468348cbb0430f61e9603f2601bf9140c8394c27b6774130a4eb8e": {
@@ -169,7 +169,7 @@ docker build -t myloadbalancer .
 Ahora podemos ejecutar el `load balancer` en la misma `network` y mapeando al puerto 80.
 
 ```bash
-$ docker run -d --rm --net=mybridge -p 80:80 \
+docker run -d --rm --net=mybridge -p 80:80 \
 --name mylb myloadbalancer
 ```
 
@@ -245,7 +245,7 @@ $ docker network inspect mybridge
 Podemos comprobar que ahora existe `service discovery` dentro de la `network`
 
 ```bash
-$ docker exec mylb cat /etc/resolv.conf
+docker exec mylb cat /etc/resolv.conf
 nameserver 127.0.0.11
 options ndots:0
 ```

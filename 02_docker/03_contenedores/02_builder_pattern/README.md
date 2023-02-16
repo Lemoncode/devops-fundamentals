@@ -38,11 +38,11 @@ ENTRYPOINT [ "./app" ]
 Ahora podemos construir la imagen y ejecutar un nuevo contenedor
 
 ```bash
-$ docker build -t mygoapp .
+docker build -t mygoapp .
 ```
 
 ```bash
-$ docker run -p 8080:8080 mygoapp
+docker run -p 8080:8080 mygoapp
 google localhost:8080/other/and/787
 ```
 
@@ -80,11 +80,11 @@ ENTRYPOINT [ "./app" ]
 Si volvemos a construir la imagen:
 
 ```bash
-$ docker build -t mygoapp .
+docker build -t mygoapp .
 ```
 
 ```bash
-$ docker run -p 8080:8080 mygoapp
+docker run -p 8080:8080 mygoapp
 ```
 
 If we check the size of our image

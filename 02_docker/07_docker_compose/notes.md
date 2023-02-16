@@ -46,45 +46,45 @@ volumes:
 From the root folder where is the `docker-compose.yml` we can start to user `docker-compose` commands.
 
 ```bash
-$ docker-compose up
+docker-compose up
 ```
 
 The matter with this, is what happen when we have more than a docker-compose file, we can use the flag `-f` to specify the file
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml up
+docker-compose -f docker-compose.00_nginx.yml up
 ```
 
 If we want that our service run on detach mode we can use `-d` flag.
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml up -d
+docker-compose -f docker-compose.00_nginx.yml up -d
 ```
 
 ### Docker Compose Stop/Kill
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml stop
-$ docker-compose -f docker-compose.00_nginx.yml kill
+docker-compose -f docker-compose.00_nginx.yml stop
+docker-compose -f docker-compose.00_nginx.yml kill
 ```
 
 
 ### Docker Compose Start
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml start
+docker-compose -f docker-compose.00_nginx.yml start
 ```
 
 ### Docker Compose Restart
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml restart
+docker-compose -f docker-compose.00_nginx.yml restart
 ```
 
 ### Docker Compose Logs
 
 ```bash
-$ docker-compose -f docker-compose.00_nginx.yml logs -f
+docker-compose -f docker-compose.00_nginx.yml logs -f
 ```
 
 ### Docker Compose Validations
@@ -92,27 +92,27 @@ $ docker-compose -f docker-compose.00_nginx.yml logs -f
 > Introduce an error on ports entry
 
 ```bash
-$ docker-compose -f docker-compose.01_wrong_config.yml config
+docker-compose -f docker-compose.01_wrong_config.yml config
 ERROR: In file './docker-compose.01_wrong_config.yml', service 'ports' must be a mapping not an array.
 ```
 
 ### Docker Compose List Containers
 
 ```bash
-$ docker-compose ps
+docker-compose ps
 ```
 
 ### Docker Compose List Processes
 
 ```bash
-$ docker-compose top 
+docker-compose top 
 ```
 
 ### Docker Compose Down
 
 
 ```bash
-$ docker-compose down 
+docker-compose down 
 ```
 
 ###  Docker Compose CMD
@@ -233,7 +233,7 @@ We define two services: `web` and `redis`
 5. Build and run your app with Compose
 
 ```bash
-$ docker-compose up
+docker-compose up
 ```
 
 6. Edit the Compose file to add a bind mount
@@ -317,9 +317,9 @@ HOME=/root
 ```
 
 ```bash
-$ docker-compose down stop
+docker-compose down stop
 ```
 
 ```bash
-$ docker-compose down --volumes
+docker-compose down --volumes
 ```
