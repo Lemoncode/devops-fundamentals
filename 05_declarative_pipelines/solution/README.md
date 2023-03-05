@@ -10,8 +10,15 @@ DB_USER=
 DB_PASSWORD=
 DB_PORT=
 DB_NAME=
-DB_VERSION=
 ```
+
+- **NODE_ENV** - The application environment, local, development, production...
+- **PORT** - The port where tha application is listening
+- **DB_HOST** -  Application `host`
+- **DB_USER** - The database user
+- **DB_PASSWORD** - The password for the database user
+- **DB_PORT** - The port where the database is listening
+- **DB_NAME** - The database name
 
 ## Starting Database Using Docker
 
@@ -75,4 +82,38 @@ docker run -d -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -v todos:/var/lib/
 
 ```bash
 npm run test:e2e
+```
+
+## Running the Application with Locally with Docker
+
+```bash
+docker build -t lemoncode/todo-app .
+```
+
+```bash
+docker network create lemoncode
+```
+
+```bash
+docker run -d -v todos:/var/lib/postgresql/data \
+ --network lemoncode \
+ --name pg-todo-server \
+ lemoncode/postgres_todo_server
+```
+
+```bash
+docker run -d --rm -p 3000:3000 \
+  --network lemoncode \
+  -e NODE_ENV=production \
+  -e PORT=3000 \
+  -e DB_HOST=pg-todo-server \
+  -e DB_USER=postgres \
+  -e DB_PASSWORD=postgres \
+  -e DB_PORT=5432 \
+  -e DB_NAME=todos_db \
+  lemoncode/todo-app
+```
+
+```bash
+curl localhost:3000/api/
 ```
