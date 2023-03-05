@@ -15,18 +15,17 @@ $ ./start_jenkins.sh <jenkins-image> <jenkins-volume-certs> <jenkins-volume-data
 * Create `01/demo3/Jenkinsfile`
 
 ```groovy
-library identifier: 'jenkins-library-review@main',
-        retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/JaimeSalas/jenkins-library-review.git'])
-
+library identifier: 'pipeline-utils@main',
+        retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/JaimeSalas/pipeline-utils.git'])
 
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
+        booleanParam(name: 'RC', defaultValue: false, description: 'Is This a Release Candidate?')
     }
     environment {
-        VERSION = "0.1.0"
-        VERSION_RC = "rc.2"
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
+        VERSION_RC = 'rc.2"
     }
     stages {
         stage('Audit tools') {
@@ -39,24 +38,20 @@ pipeline {
                 VERSION_SUFFIX = getVersionSuffix rcNumber: env.VERSION_RC, isReleaseCandidate: params.RC
             }
             steps {
-                echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
-                sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_SUFFIX}" ./01/src/Pi.Web/Pi.Web.csproj'
+                dir('./01/solution') {
+                    echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
-                    sh '''
-                        dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                    mstest testResultsFile:"**/*.trx", keepLongStdio: true
+                dir('./01/solution') {
+                    sh 'npm test'
                 }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet ./01/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
             }
         }
         stage('Publish') {
@@ -64,12 +59,12 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj -o ./out'
-                archiveArtifacts('out/')
+                archiveArtifacts('01/solution/app/')
             }
         }
     }
 }
+
 ```
 
 Jenkins API for validating pipeline syntax
@@ -78,16 +73,17 @@ Move on  terminal to the folder that contains the Jenkinsfile that we want to `l
 
 > Reference: https://sandrocirulli.net/how-to-validate-a-jenkinsfile/
 
-```
+```bash
 curl --user lemoncode:lemoncode -X POST -F "jenkinsfile=<./Jenkinsfile" http://localhost:8080/pipeline-model-converter/validate
 ```
+
 If we introduce an error we get
 
 ```bash
-Jaimes-MacBook-Pro:demo3 jaimesalaszancada$ curl --user lemoncode:lemoncode -X POST -F "jenkinsfile=<./Jenkinsfile" http://localhost:8080/pipeline-model-converter/validate
 Errors encountered validating Jenkinsfile:
-WorkflowScript: 10: expecting ''', found '\n' @ line 10, column 34.
-           VERSION = '0.1.0" 
+WorkflowScript: 11: expecting ''', found '\n' @ line 11, column 28.
+           VERSION_RC = 'rc.2"
+                              ^ 
 ```
 
 > Usually need a crumb for CRSF protection

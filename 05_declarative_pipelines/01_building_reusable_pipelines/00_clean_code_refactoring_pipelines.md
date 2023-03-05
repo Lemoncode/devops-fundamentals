@@ -9,26 +9,30 @@ Remove previous pipelines
 Run Jenkins in [Docker](https://www.docker.com/products/docker-desktop):
 
 ```bash
-$ ./start_jenkins.sh <jenkins-image> <jenkins-volume-certs> <jenkins-volume-data>
+./start_jenkins.sh <jenkins-image> <jenkins-volume-certs> <jenkins-volume-data>
 ```
 
-Create a new directory *05_declarative_pipelines/src_tmp/jenkins-demos-review/01*. Unzip code from `05_declarative_pipelines` directory
+Create a new directory _05_declarative_pipelines/src_tmp/jenkins-demos-review/01_.
+
+- Execute the following actions:
+  - Create `01/demo1/1.1/Jenkinsfile`
+  - Copy `solution` into `01`
+
+Publish the code into GitHub:
 
 ```bash
-$ unzip code.zip -d ./src_temp/jenkins-demos-review/01
+git add .
+git commit -m "added example code"
+git push
 ```
 
-Push the changes to the remote repository
-
-Install `mstest` plugin
-
-Create `01/demo1/1.1/Jenkinsfile`
+Update `01/demo1/1.1/Jenkinsfile` with the following content:
 
 ```groovy
 pipeline {
     agent any
     environment {
-        VERSION = "0.1.0"
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -37,31 +41,27 @@ pipeline {
                 sh '''
                     git version
                     docker version
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                    node --version
+                    npm version
                 '''
             }
         }
         stage('Build') {
             steps {
-                echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
-                sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj'
+                dir('./01/solution') {
+                    echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
-                    sh '''
-                        dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                    mstest testResultsFile:"**/*.trx", keepLongStdio: true
+                dir('./01/solution') {
+                    sh 'npm test'
                 }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet ./01/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
             }
         }
     }
@@ -70,6 +70,12 @@ pipeline {
 
 Push the changes to the remote repository
 
+```bash
+git add .
+git commit -m "added Jenkinsfile"
+git push
+```
+
 ## 1.1 A real build pipeline
 
 Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
@@ -77,7 +83,7 @@ Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
 - New item, pipeline, `demo1-1`
 - Select pipeline from source control
 - Git - https://github.com/JaimeSalas/jenkins-pipeline-demos.git
-- Path to Jenkinsfile  - `01/demo1/1.1/Jenkinsfile`
+- Path to Jenkinsfile - `01/demo1/1.1/Jenkinsfile`
 - Open in Blue Ocean
 - Run
 
@@ -89,45 +95,42 @@ stage('Audit tools') {
         sh '''
             git version
             docker version
-            dotnet --list-sdks
-            dotnet --list-runtimes
+            node --version
+            npm version
         '''
     }
 }
 ```
 
-```groovy
-sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./m3/src/Pi.Web/Pi.Web.csproj'
-```
-Here we're simply doing the build
-
-This stage enumerates all the tools and versions related with the build.
+Here we are checking the tool versioning.
 
 ```groovy
-stage('Unit Test') {
+stage('Build') {
     steps {
-        dir('./01/src') {
+        dir('./01/solution') {
+            echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
             sh '''
-                dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
+                npm install
+                npm run build
             '''
-            mstest testResultsFile:"**/*.trx", keepLongStdio: true
         }
     }
 }
 ```
 
-With `dir` we change the directory. Then we run the related unit tests, and also we're using `mstest` that comes from a plug-in, it's going to collect all results from the test runs and make them available to Jnkins in a JUnit format.
+Here we're simply doing the build
+
+With `dir` we change the directory. Then we run the related unit tests: 
 
 ```groovy
-stage('Smoke Test') {
+stage('Unit Test') {
     steps {
-        sh 'dotnet ./01/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
+        dir('./01/solution') {
+            sh 'npm test'
+        }
     }
 }
 ```
-
-For last we're simply running a smoke test.
 
 We want that this Jenkinsfile be useful for more than one scenrio, right now is only good for continous integration, what we want is to include a manual way to trigger this build and set that is a release candidate.
 
@@ -140,11 +143,11 @@ pipeline {
     agent any
     /*diff*/
     parameters {
-        booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
+        booleanParam(name: 'RC', defaultValue: false, description: 'Is This a Release Candidate?')
     }
     /*diff*/
     environment {
-        VERSION = "0.1.0"
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -153,34 +156,33 @@ pipeline {
                 sh '''
                     git version
                     docker version
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                    node --version
+                    npm version
                 '''
             }
         }
         stage('Build') {
+            /*diff*/
             environment {
-                VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
+                VERSION_SUFFIX = sh(script:'if [ "${RC}" == "true" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)
             }
+            /*diff*/
             steps {
-                echo "Building version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
-                sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_SUFFIX}" ./m3/src/Pi.Web/Pi.Web.csproj'
+                dir('./01/solution') {
+                    // echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
+                    echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
-                    sh '''
-                        dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                    mstest testResultsFile:"**/*.trx", keepLongStdio: true
+                dir('./01/solution') {
+                    sh 'npm test'
                 }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet ./m3/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
             }
         }
         stage('Publish') {
@@ -188,16 +190,20 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj -o ./out'
-                archiveArtifacts('out/')
+                archiveArtifacts('01/solution/app/')
             }
         }
     }
 }
-
 ```
 
 Push changes to remote repository
+
+```bash
+git add .
+git commit -m "added Jenkinsfile with RC"
+git push
+```
 
 - Copy item, `demo1-2` from `demo1-1`
 - Path to Jenkinsfile `01/demo1/1.2/Jenkinsfile`
@@ -208,7 +214,7 @@ Push changes to remote repository
 
 ```groovy
 parameters {
-    booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
+    booleanParam(name: 'RC', defaultValue: false, description: 'Is This a Release Candidate?')
 }
 ```
 
@@ -220,10 +226,14 @@ stage('Build') {
 +       VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
 +   }
     steps {
--       echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
-+       echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
--       sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj'
-+       sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_SUFFIX}" ./01/src/Pi.Web/Pi.Web.csproj'
+        dir('./01/solution') {
+-           echo "Building version ${VERSION} with suffix: ${VERSION_RC}"
++           echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
+            sh '''
+                npm install
+                npm run build
+            '''
+        }
     }
 }
 ```
@@ -236,9 +246,11 @@ If is not a release candidate we add the build number, if is a release candidate
 
 ```groovy
 // ....
-stage('Smoke Test') {
+stage('Unit Test') {
     steps {
-        sh 'dotnet ./01/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
+        dir('./01/solution') {
+            sh 'npm test'
+        }
     }
 }
 /*diff*/
@@ -247,8 +259,7 @@ stage('Publish') {
         expression { return params.RC }
     }
     steps {
-        sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj -o ./out'
-        archiveArtifacts('out/')
+        archiveArtifacts('01/solution/app/')
     }
 }
 /*diff*/
@@ -262,7 +273,6 @@ This is conditional stage, and only will run if `RC` parameter was set to true
 
 > Check logs and artifacts
 
-
 ## 1.3 Moving pipeline logic into Groovy methods
 
 Create `01/demo1/1.3/Jenkinsfile` starting from the previous one, and edit as follows
@@ -273,10 +283,10 @@ Let's refactor to get the semantic version that we want.
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
+        booleanParam(name: 'RC', defaultValue: false, description: 'Is This a Release Candidate?')
     }
     environment {
-        VERSION = "0.1.0"
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -285,36 +295,32 @@ pipeline {
 -               sh '''
 -                   git version
 -                   docker version
--                   dotnet --list-sdks
--                   dotnet --list-runtimes
+-                   node --version
+-                   npm version
 -               '''
 +               auditTools()
             }
         }
         stage('Build') {
             environment {
--               VERSION_SUFFIX = "${sh(script:'if [ "${RC}" == "false" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)}"
+-               VERSION_SUFFIX = sh(script:'if [ "${RC}" == "true" ] ; then echo -n "${VERSION_RC}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION_RC}"; fi', returnStdout: true)
 +               VERSION_SUFFIX = getVersionSuffix()
             }
             steps {
-                echo "Building version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
-                sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_SUFFIX}" ./m3/src/Pi.Web/Pi.Web.csproj'
+                dir('./01/solution') {
+                    echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
-                dir('./m3/src') {
-                    sh '''
-                        dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                    mstest testResultsFile:"**/*.trx", keepLongStdio: true
+                dir('./01/solution') {
+                    sh 'npm test'
                 }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet ./m3/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
             }
         }
         stage('Publish') {
@@ -322,8 +328,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./m3/src/Pi.Web/Pi.Web.csproj -o ./out'
-                archiveArtifacts('out/')
+                archiveArtifacts('01/solution/app/')
             }
         }
     }
@@ -333,17 +338,17 @@ pipeline {
 +   if (params.RC) {
 +       return env.VERSION_RC
 +   } else {
-+       return env.VERSION_RC + '+ci' + env.BUILD_NUMBER
++       return env.VERSION_RC + 'ci' + env.BUILD_NUMBER
 +   }
 +}
 +
 +void auditTools() {
-+   sh '''
-+       git version
-+       docker version
-+       dotnet --list-sdks
-+       dotnet --list-runtimes
-+   '''
++    sh '''
++        git version
++        docker version
++        node --version
++        npm version
++    '''
 +}
 +
 ```
@@ -361,10 +366,10 @@ Push changes
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'RC', defaultValue: false, description: 'Is this a Release Candidate?')
+        booleanParam(name: 'RC', defaultValue: false, description: 'Is This a Release Candidate?')
     }
     environment {
-        VERSION = "0.1.0"
+        VERSION = sh([ script: 'cd ./01/solution && npx -c \'echo $npm_package_version\'', returnStdout: true ]).trim()
         VERSION_RC = "rc.2"
     }
     stages {
@@ -375,27 +380,23 @@ pipeline {
         }
         stage('Build') {
             environment {
-                getVersionSuffix()
+                VERSION_SUFFIX = getVersionSuffix()
             }
             steps {
-                echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
-                sh 'dotnet build -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_SUFFIX}" ./01/src/Pi.Web/Pi.Web.csproj'
+                dir('./01/solution') {
+                    echo "Building version ${VERSION} with suffix: ${VERSION_SUFFIX}"
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
-                dir('./01/src') {
-                    sh '''
-                        dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                    mstest testResultsFile:"**/*.trx", keepLongStdio: true
+                dir('./01/solution') {
+                    sh 'npm test'
                 }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet ./01/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll'
             }
         }
         stage('Publish') {
@@ -403,8 +404,7 @@ pipeline {
                 expression { return params.RC }
             }
             steps {
-                sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./01/src/Pi.Web/Pi.Web.csproj -o ./out'
-                archiveArtifacts('out/')
+                archiveArtifacts('01/solution/app/')
             }
         }
     }
@@ -412,9 +412,9 @@ pipeline {
 
 String getVersionSuffix() {
     if (params.RC) {
-        return env.VERSION_RC;
+        return env.VERSION_RC
     } else {
-        return env.VERSION_RC + '+ci' + env.BUILD_NUMBER;
+        return env.VERSION_RC + 'ci' + env.BUILD_NUMBER
     }
 }
 
@@ -422,8 +422,8 @@ void auditTools() {
     sh '''
         git version
         docker version
-        dotnet --list-sdks
-        dotnet --list-runtimes
+        node --version
+        npm version
     '''
 }
 ```
@@ -452,7 +452,6 @@ void auditTools() {
     '''
 }
 ```
-
 
 - Open in Blue Ocean
 - Run again - _RC = no_

@@ -101,6 +101,12 @@ pipeline {
 }
 ```
 
+```bash
+git add .
+git commit -m "added demo1/1.2"
+git push
+```
+
 Back to http://localhost:8080
 
 - Copy item, `demo1-1.1` from `demo1-1.2`
@@ -195,6 +201,12 @@ pipeline {
         }
     }
 }
+```
+
+```bash
+git add .
+git commit -m "added demo1/1.3"
+git push
 ```
 
 Back to http://localhost:8080
