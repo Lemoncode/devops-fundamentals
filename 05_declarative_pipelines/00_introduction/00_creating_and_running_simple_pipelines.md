@@ -133,6 +133,12 @@ pipeline {
 }
 ```
 
+```bash
+git add .
+git commit -m "added basic Jenkinsfile"
+git push
+```
+
 Back in the classic UI http://localhost:8080
 
 - New item, pipeline, `demo1-3`

@@ -29,6 +29,13 @@ pipeline {
 }
 ```
 
+```bash
+git add .
+git commit -m "added demo1/1.1"
+git push
+```
+
+
 Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
 
 - New item, pipeline, `demo1-1.1`
