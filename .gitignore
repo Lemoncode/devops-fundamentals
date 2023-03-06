@@ -116,3 +116,4 @@ kube-config/
 *.hcl
 *.tfplan
 *.tfstate
+*.tfstate.backup
