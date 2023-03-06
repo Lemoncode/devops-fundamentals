@@ -16,7 +16,7 @@ You will need the same requirements from `02-jenkins-multibranch-pipeline` and a
 
 ### New branch, new steps
 
-We'll start creating a new `develop` branch starting from `master`.
+We'll start creating a new `develop` branch starting from `main`.
 
 ```bash
 git checkout -b develop

@@ -112,3 +112,7 @@ todo
 src_tmp/
 environment/
 kube-config/
+.terraform
+*.hcl
+*.tfplan
+*.tfstate

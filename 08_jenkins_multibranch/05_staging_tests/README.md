@@ -217,9 +217,9 @@ We can now sync the `Jenkinsfile` with the other branches:
 git checkout develop
 git merge staging develop
 git push
-git checkout master
-git merge staging master
-git git push
+git checkout main
+git merge staging main
+git push
 ```
 
 # About Basefactor + Lemoncode
