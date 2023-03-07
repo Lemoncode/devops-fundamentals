@@ -11,9 +11,7 @@ FROM cypress/base:10
 
 COPY . .
 
-RUN npm install
-
-RUN npm install cypress
+RUN npm ci
 
 RUN $(npm bin)/cypress verify
 ```
@@ -21,11 +19,11 @@ RUN $(npm bin)/cypress verify
 ## Running e2e in a Docker container
 
 ```bash
-$ docker build -t jaimesalas/front-e2e:0.0.1 -f Dockerfile.e2e .
+docker build -t jaimesalas/front-e2e:0.0.1 -f Dockerfile.e2e .
 ```
 
 ```bash
-$ docker run -it jaimesalas/front-e2e:0.0.1 npm run test:e2e:local
+docker run -it jaimesalas/front-e2e:0.0.1 npm run test:e2e:local
 ```
 
 ## Creating a Jenkinsfile

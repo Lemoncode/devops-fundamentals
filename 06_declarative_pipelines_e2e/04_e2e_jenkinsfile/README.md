@@ -14,7 +14,7 @@ def back
 
 def withockerNetwork(Closure inner) {
     try {
-        networkId = UUID.randomUUID().toStriing();
+        networkId = UUID.randomUUID().toString();
         sh "docker network create ${networkId}";
         inner.call(networkId);
     } finally {

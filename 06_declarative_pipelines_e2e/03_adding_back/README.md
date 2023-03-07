@@ -5,8 +5,8 @@
 Create a new folder `back` and set as root folder
 
 ```bash
-$ npm init -y
-$ npm i express cors dotenv
+npm init -y
+npm i express cors dotenv
 ```
 
 Create `index.js`
@@ -58,7 +58,7 @@ FROM node:12-buster
 
 COPY . .
 
-RUN npm install
+RUN npm ci
 
 CMD ["npm", "start"]
 ```
@@ -66,7 +66,7 @@ CMD ["npm", "start"]
 ## Updating front code
 
 ```bash
-$ npm i axios
+npm i axios
 ```
 
 Add `.env`
@@ -78,7 +78,7 @@ API_URL=http://localhost:4000
 Update `webpack.config.js`
 
 ```bash
-$ npm i dotenv-webpack
+npm i dotenv-webpack
 ```
 
 ```diff
@@ -227,29 +227,29 @@ Update `package.json` to make `cypress` consume `env api_url`
 1. Create a Docker network
 
 ```bash
-$ docker network create e2e
+docker network create e2e
 ```
 
 2. Build back image
 
 ```bash
-$ docker build -t jaimesalas/e2e-back ./back
+docker build -t jaimesalas/e2e-back ./back
 ```
 
 3. Run backend
 
 ```bash
-$ docker run -d --name e2e-back -e PORT=4000 --network e2e jaimesalas/e2e-back
+docker run -d --name e2e-back -e PORT=4000 --network e2e jaimesalas/e2e-back
 ```
 
 4. Build front for e2e
 
 ```bash
-$ docker build -t jaimesalas/e2e -f ./front/Dockerfile.e2e ./front
+docker build -t jaimesalas/e2e -f ./front/Dockerfile.e2e ./front
 ```
 
 5. Run e2e tests
 
 ```bash
-$ docker run --rm -e API_URL=http://e2e-back:4000 --network e2e jaimesalas/e2e npm run test:e2e
+docker run --rm -e API_URL=http://e2e-back:4000 --network e2e jaimesalas/e2e npm run test:e2e
 ```

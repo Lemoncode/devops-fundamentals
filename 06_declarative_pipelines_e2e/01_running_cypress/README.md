@@ -5,7 +5,7 @@
 Let's create a simple test with `cypress`, the better way to make this is allow `cypress` to build the scaffolding for us:
 
 ```bash
-$ node_modules/cypress/bin/cypress open
+node_modules/cypress/bin/cypress open
 ```
 
 Remove `./front/cypress/integration/examples`, and create a new file `integration/main-page.spec.js`
@@ -55,7 +55,7 @@ Instead of opening cypress from the terminal, we're going to modify the `package
 Right now we have our test that are running on the browser by `cypress`, but the problem with this approach is that must be raised by hand, and does not fit for `CI`. Let's install a `npm` package that helps us:
 
 ```bash
-$ npm i start-server-and-test -D
+npm i start-server-and-test -D
 ```
 
 Update `package.json` as follows
