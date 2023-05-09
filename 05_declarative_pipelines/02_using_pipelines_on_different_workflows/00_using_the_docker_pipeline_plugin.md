@@ -17,28 +17,24 @@ Before start remove previous pipelines
 Create a new directory *05_declarative_pipelines/src_tmp/jenkins-demos-review/02*. Unzip code from `05_declarative_pipelines` directory
 
 ```bash
-$ unzip code.zip -d ./src_temp/jenkins-demos-review/02
+unzip code.zip -d ./src_temp/jenkins-demos-review/02
 ```
 
 Create `02/demo1/1.1/Jenkinsfile`
 
 ```groovy
 pipeline {
-    agent { 
+    agent {
         docker {
-            image 'mcr.microsoft.com/dotnet/core/sdk:3.1.101'
+            image 'node:alpine3.12'
         }
-    }
-    // https://stackoverflow.com/questions/53556623/dotnet-build-permission-denied-in-docker-container-running-jenkins
-    environment {
-       HOME = '/tmp'
     }
     stages {
         stage('Verify') {
             steps {
                 sh '''
-                  dotnet --list-sdks
-                  dotnet --list-runtimes
+                  node --version
+                  npm version
                 '''
                 sh 'printenv'
                 sh 'ls -l "$WORKSPACE"'
@@ -46,22 +42,19 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'dotnet build "$WORKSPACE/02/src/Pi.Web/Pi.Web.csproj"'
+                dir("$WORKSPACE/02/src") {
+                    sh '''
+                      npm install
+                      npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
               dir("$WORKSPACE/02/src") {
-                sh '''
-                    dotnet test Pi.Math.Tests/Pi.Math.Tests.csproj
-                    dotnet test Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                '''
+                sh 'npm test'
               }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-              sh 'dotnet "$WORKSPACE/02/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll"'
             }
         }
     }
@@ -80,47 +73,48 @@ Log into Jenkins at http://localhost:8080 with `lemoncode`/`lemoncode`.
 
 ```groovy
 agent { 
-    docker {
-        image 'mcr.microsoft.com/dotnet/core/sdk:3.1.101'
+    agent {
+        docker {
+            image 'node:alpine3.12'
+        }
     }
 }
 ```
 
-This is the part that is different now, we're specifying that the agent is a `docker container`, and the image `'mcr.microsoft.com/dotnet/core/sdk:3.1.101'` that we want to use. So what happens when this build runs is that the Jenkins starts a container from this image.
+This is the part that is different now, we're specifying that the agent is a `docker container`, and the image `'node:alpine3.12'` that we want to use. So what happens when this build runs is that the Jenkins starts a container from this image.
 
 All the shell commands are actually executed inside the container.
 
-I can use `docker` as my build agent, and I don't need to have a machine with the `dotnet core sdk` installed. Any Jenkins server, with docker install could spin up a an agent with `dotnet core` and execute the whole build pipeline inside that container, with Jenkins taking care of moving files around and setting up the environment of the container for me.
+I can use `docker` as my build agent, and I don't need to have a machine with the `node` installed. Any Jenkins server, with docker install could spin up a an agent with `node` and execute the whole build pipeline inside that container, with Jenkins taking care of moving files around and setting up the environment of the container for me.
 
 ## 1.2 Custom container agents
 
 * Create `02/Dockerfile`
 
 ```Dockerfile
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 as builder
+FROM node:alpine3.12 as builder
 
-WORKDIR /src
-COPY src/Pi.Math/Pi.Math.csproj ./Pi.Math/
-COPY src/Pi.Runtime/Pi.Runtime.csproj ./Pi.Runtime/
-COPY src/Pi.Web/Pi.Web.csproj ./Pi.Web/
+WORKDIR /build
 
-WORKDIR /src/Pi.Web
-RUN dotnet restore
+COPY ./src .
 
-COPY src/Pi.Math/ /src/Pi.Math/
-COPY src/Pi.Runtime /src/Pi.Runtime/
-COPY src/Pi.Web /src/Pi.Web/
-RUN dotnet publish -c Release -o /out Pi.Web.csproj
+RUN npm install
 
-# app image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.1
+RUN npm run build
 
-EXPOSE 80
-ENTRYPOINT [ "dotnet", "Pi.Web.dll" ]
-CMD [ "-m", "console", "-dp", "6" ]
+FROM node:alpine3.12 as application
 
-WORKDIR /app
-COPY --from=builder /out/ .
+WORKDIR /opt/app
+
+COPY ./src/package.json .
+
+COPY ./src/package-lock.json .
+
+COPY --from=builder /build/app .
+
+RUN npm i --only=production
+
+ENTRYPOINT ["node", "app.js"]
 ```
 
 
@@ -130,16 +124,21 @@ COPY --from=builder /out/ .
 pipeline {
     agent {
         dockerfile {
-            dir '02'
+            dir '02/src'
         }
     }
     stages {
         stage('Verify') {
             steps {
                 sh'''
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                    node --version
+                    npm version
                 '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t jaimesalas/jenkins-pipeline-demos:0.0.1 .'
             }
         }
         stage('Smoke Test') {
@@ -161,18 +160,23 @@ Push changes
 
 ```groovy
 pipeline {
-    agent { // [1]
+    agent {
         dockerfile {
-            dir '02'
+            dir '02/src'
         }
     }
     stages {
         stage('Verify') {
             steps {
                 sh'''
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                    node --version
+                    npm version
                 '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t jaimesalas/jenkins-pipeline-demos:0.0.1 .'
             }
         }
         stage('Smoke Test') {
@@ -198,14 +202,14 @@ So it's going to see how that looks. So if we check this build its failed as exp
 
 The reason this is failing is because Jenkins is trying to run that container as a build agent but actually that container has been packaged to run my application. There is no any uses a build agent. So this Jenkinsfile, I'm trying to run the pipeline doesn't make any sense because the `Dockerfile` that I'm using is the `Dockerfile` for my application. So I can use that as a build agent because it doesn't have any sdk inside it. 
 
-> Walk through the fixed [Dockerfile.sdk](../Dockerfile.sdk) and [Jenkinsfile.fixed](./1.2/Jenkinsfile.fixed)
+> Walk through the fixed [Dockerfile.node](../Dockerfile.node) and [Jenkinsfile.fixed](./1.2/Jenkinsfile.fixed)
 
-* Create `Dockerfile.sdk`
+* Create `Dockerfile.node`
 
 ```Dockerfile
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 as builder
+FROM node:alpine3.12 as builder
 
-ENV PS_MODULE=m4
+ENV LEMONCODE_VAR=lemon
 ```
 
 * And create `02/demo1/1.2/Jenkinsfile.fixed` as follows
@@ -214,20 +218,16 @@ ENV PS_MODULE=m4
 pipeline {
     agent {
         dockerfile {
-            dir '02'
-            filename 'Dockerfile.sdk'
+            dir '02/src'
+            filename 'Dockerfile.node'
         }
-    }
-    // https://stackoverflow.com/questions/53556623/dotnet-build-permission-denied-in-docker-container-running-jenkins
-    environment {
-        HOME = '/tmp'
     }
     stages {
         stage('Verify') {
             steps {
                 sh '''
-                    dotnet --list-sdks
-                    dotnet --list-runtimes
+                  node --version
+                  npm version
                 '''
                 sh 'printenv'
                 sh 'ls -l "$WORKSPACE"'
@@ -235,22 +235,19 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'dotnet build "$WORKSPACE/02/src/Pi.Web/Pi.Web.csproj"'
+                dir("$WORKSPACE/02/src") {
+                    sh '''
+                        npm install
+                        npm run build
+                    '''
+                }
             }
         }
         stage('Unit Test') {
             steps {
                 dir("$WORKSPACE/02/src") {
-                    sh '''
-                        dotnet test Pi.Math.Tests/Pi.Math.Tests.csproj
-                        dotnet test Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
-                    '''
-                }
-            }
-        }
-        stage('Smoke Test') {
-            steps {
-                sh 'dotnet "$WORKSPACE/02/src/Pi.Web/bin/Debug/netcoreapp3.1/Pi.Web.dll"'
+                sh 'npm test'
+              }
             }
         }
     }
@@ -260,8 +257,8 @@ pipeline {
 ```groovy
 agent {
     dockerfile {
-        dir '02'
-        filename 'Dockerfile.sdk' // [1]
+        dir '02/src'
+        filename 'Dockerfile.node' // [1]
     }
 }
 ```
@@ -284,7 +281,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/Dockerfile 02")
+                    image = docker.build("jaimesalas/jenkins-pipeline-demos:0.0.1", "--pull -f 02/src/Dockerfile 02/src")
                 }
             }
         }

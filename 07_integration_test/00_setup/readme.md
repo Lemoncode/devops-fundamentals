@@ -136,7 +136,7 @@ COPY ./hangman_database.sql /docker-entrypoint-initdb.d
 Construimos esta imagen
 
 ```bash
-$ docker build -t jaimesalas/hangman-db-migration .
+docker build -t jaimesalas/hangman-db-migration .
 ```
 
 Las migraciones se ejecutan mediante código, necesitamos un proceso que sea capaz de conectarse con la base de datos y ejecute ese código. Para este fin vamos a crear una nueva imagen de Docker, que contendrá el código necesario para ejecutarlas:
@@ -165,7 +165,7 @@ En esta imagen estamos copiando el fichero [wait-for-it.sh](https://github.com/v
 Contruimos esta imagen
 
 ```bash
-$ docker build -t jaimesalas/db-migrations -f Dockerfile.migrations .
+docker build -t jaimesalas/db-migrations -f Dockerfile.migrations .
 ```
 
 Con las dos imágenes creadas anteriormente podemos escribir el siguiente script que se encargará del volcado de la base de datos:

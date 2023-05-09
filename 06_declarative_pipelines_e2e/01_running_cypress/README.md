@@ -11,7 +11,7 @@ node_modules/cypress/bin/cypress open
 Remove `./front/cypress/integration/examples`, and create a new file `integration/main-page.spec.js`
 
 ```js
-/// <reference types="cypress">
+/// <reference types="Cypress" />
 
 describe('main page', () => {
     it('visit the main page', () => {
