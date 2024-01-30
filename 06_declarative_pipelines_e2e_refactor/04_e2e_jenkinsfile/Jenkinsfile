@@ -54,7 +54,7 @@ pipeline {
                                     def pwd = sh(
                                         script: 'pwd',
                                         returnStdout: true
-                                    )
+                                    ).trim()
                                     // docker.script.sh(
                                     //     script: 'docker run --rm --network ${n} -e CYPRESS_baseUrl=http://e2e-front:8081 ' + 
                                     //     '-e CYPRESS_api_url=http://e2e-back:4000/scores ' +  
