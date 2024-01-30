@@ -28,8 +28,18 @@ pipeline {
             steps {
                 script {
                     back = docker.build(
-                        "jaimesalas/front",
+                        "jaimesalas/back",
                         "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/back/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/back"
+                    )
+                }
+            }
+        }
+        stage('Build e2e image') {
+            steps {
+                script {
+                    back = docker.build(
+                        "jaimesalas/e2e",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e"
                     )
                 }
             }
