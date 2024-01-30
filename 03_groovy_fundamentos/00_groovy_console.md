@@ -57,8 +57,8 @@ assert x == 10
 And then we can run it, as follows:
 
 ```bash
-$ docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 00_groovy_console.groovy
-$ 10
+docker run --rm -v $(pwd):/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy 00_groovy_console.groovy
+10
 ```
 
 If we change the value of `x`

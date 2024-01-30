@@ -2,7 +2,7 @@ IMAGE=$1
 CERTS_VOLUME=$2
 DATA_VOLUME=$3
 
-# StartDocker in Docker into jenkins network
+# Start Docker in Docker into jenkins network
 docker container run --name jenkins-docker --rm --detach \
     --privileged --network jenkins --network-alias docker \
     --env DOCKER_TLS_CERTDIR=/certs \
