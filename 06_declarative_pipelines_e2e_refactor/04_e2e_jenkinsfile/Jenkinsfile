@@ -51,7 +51,10 @@ pipeline {
                         withDockerNetwork{n->
                             back.withRun("--name e2e-back --network ${n} -e PORT=4000") {c ->
                                 front.withRun("--name e2e-front --network ${n} -e API_URL=http://e2e-back:4000"){d ->
-                                    def pwd = sh 'pwd'
+                                    def pwd = sh(
+                                        script: 'pwd',
+                                        returnStdout: true
+                                    )
                                     docker.script.sh(
                                         script: "docker run --rm --network ${n} -e CYPRESS_baseUrl=http://e2e-front:8081 -e CYPRESS_api_url=http://e2e-back:4000/scores  -v ${pwd}/cypress:/app/cypress -v ${pwd}/cypress.config.js:/app/cypress.config.js jaimesalas/e2e npm run cypress:run",
                                         returnStdout: false
