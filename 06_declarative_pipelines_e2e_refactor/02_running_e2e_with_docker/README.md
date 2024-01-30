@@ -118,25 +118,28 @@ docker run -it -v $PWD/cypress:/app/cypress \
 Create `front/Jenkinsfile`
 
 ```groovy
-def image
+def image 
 
 pipeline {
-    agent any 
+    agent any
     stages {
-        stage('Build e2e runner') {
+        stage('Build front image') {
             steps {
                 script {
-                    image = docker.build(
-                        "jaimesalas/e2e", 
-                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e/02_running_e2e_with_docker/front/Dockerfile.e2e $WORKSPACE/06_declarative_pipelines_e2e/02_running_e2e_with_docker/front"
-                        )
+                    front = docker.build(
+                        "jaimesalas/front",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/front/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/front"
+                    )
                 }
             }
         }
-        stage('e2e') {
+        stage('Build e2e image') {
             steps {
                 script {
-                    docker.script.sh(script: "docker run --rm jaimesalas/e2e npm run test:e2e:local", returnStdout: false)
+                    e2e = docker.build(
+                        "jaimesalas/front",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/e2e/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/e2e"
+                    )
                 }
             }
         }
