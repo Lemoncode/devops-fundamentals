@@ -1,5 +1,6 @@
 def front
 def back
+def e2e
 
 def withDockerNetwork(Closure inner) {
     try {
@@ -37,10 +38,17 @@ pipeline {
         stage('Build e2e image') {
             steps {
                 script {
-                    back = docker.build(
+                    e2e = docker.build(
                         "jaimesalas/e2e",
                         "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e"
                     )
+                }
+            }
+        }
+        stage('e2e run') {
+            steps {
+                dir('06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e') {
+                    sh 'ls'
                 }
             }
         }
