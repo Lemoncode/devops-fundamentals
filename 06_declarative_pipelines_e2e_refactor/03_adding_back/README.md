@@ -299,13 +299,13 @@ EXPOSE 8081
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-4. Build front for e2e
+8. Build front for e2e
 
 ```bash
 docker build -t jaimesalas/e2e-front ./front
 ```
 
-5. Run front 
+9. Run front 
 
 ```bash
 docker run -d --name e2e-front \
@@ -314,7 +314,7 @@ docker run -d --name e2e-front \
  jaimesalas/e2e-front
 ```
 
-6. Run e2e tests
+10. Run e2e tests
 
 ```bash
 docker run --rm -e API_URL=http://e2e-back:4000 --network e2e jaimesalas/e2e npm run test:e2e

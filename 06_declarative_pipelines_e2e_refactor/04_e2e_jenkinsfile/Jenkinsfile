@@ -1,0 +1,38 @@
+def front
+def back
+
+def withDockerNetwork(Closure inner) {
+    try {
+        networkId = UUID.randomUUID().toString();
+        sh "docker network create ${networkId}";
+        inner.call(networkId);
+    } finally {
+        sh "docker network rm ${networkId}";
+    }
+}
+
+pipeline {
+    agent any
+    stages {
+        stage('Build front image') {
+            steps {
+                script {
+                    front = docker.build(
+                        "jaimesalas/front",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/front/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/front"
+                    )
+                }
+            }
+        }
+        stage('Build back image') {
+            steps {
+                script {
+                    back = docker.build(
+                        "jaimesalas/front",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/back/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/back"
+                    )
+                }
+            }
+        }
+    }
+}
