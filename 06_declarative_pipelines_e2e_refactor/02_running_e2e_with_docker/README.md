@@ -111,6 +111,8 @@ docker run -it -v $PWD/cypress:/app/cypress \
  jaimesalas/dd-e2e:0.0.1 npm run cypress:run
 ```
 
+> Notice that we're using `host.docker.internal`
+
 ## Creating a Jenkinsfile
 
 Create `front/Jenkinsfile`

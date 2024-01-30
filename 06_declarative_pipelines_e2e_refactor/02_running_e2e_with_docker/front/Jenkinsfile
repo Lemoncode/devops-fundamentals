@@ -1,0 +1,17 @@
+def image 
+
+pipeline {
+    agent any
+    stages {
+        stage('Build from image') {
+            steps {
+                script {
+                    front = docker.build(
+                        "jaimesalas/front",
+                        "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/front/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/02_running_e2e_with_docker/front"
+                    )
+                }
+            }
+        }
+    }
+}
