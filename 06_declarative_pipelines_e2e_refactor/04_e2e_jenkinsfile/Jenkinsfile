@@ -63,12 +63,11 @@ pipeline {
                                     //     returnStdout: false
                                     // )
                                     sh '''
-                                        docker run --rm --network '''+n+''' \
-                                        -e CYPRESS_baseUrl=http://e2e-front:8081 \
-                                        -e CYPRESS_api_url=http://e2e-back:4000/scores \
-                                        -v '''+pwd+'''/cypress:/app/cypress \
-                                        -v '''+pwd+'''/cypress.config.js:/app/cypress.config.js \
-                                        jaimesalas/e2e npm run cypress:run
+                                        docker run --rm --network '''+n+'''
+                                        -e CYPRESS_baseUrl=http://e2e-front:8081
+                                        -e CYPRESS_api_url=http://e2e-back:4000/scores
+                                        -v '''+pwd+'''/cypress:/app/cypress
+                                        -v '''+pwd+'''/cypress.config.js:/app/cypress.config.js jaimesalas/e2e npm run cypress:run
                                     '''
                                 }
                             }
