@@ -1,6 +1,5 @@
 def front
 def back
-def e2e
 
 def withDockerNetwork(Closure inner) {
     try {
@@ -38,7 +37,7 @@ pipeline {
         stage('Build e2e image') {
             steps {
                 script {
-                    e2e = docker.build(
+                    docker.build(
                         "jaimesalas/e2e",
                         "--pull -f $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e/Dockerfile $WORKSPACE/06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e"
                     )
@@ -48,7 +47,18 @@ pipeline {
         stage('e2e run') {
             steps {
                 dir('06_declarative_pipelines_e2e_refactor/04_e2e_jenkinsfile/e2e') {
-                    sh 'ls'
+                    script {
+                        withDockerNetwork{n->
+                            back.withRun("--name e2e-back --network ${n} -e PORT=4000") {c ->
+                                front.withRun("--name e2e-front --network ${n} -e API_URL=http://e2e-back:4000"){d ->
+                                    docker.script.sh(
+                                        script: "docker run --rm --network ${n} -e CYPRESS_baseUrl=http://e2e-front:8081 -e CYPRESS_api_url=http://e2e-back:4000/scores  -v $PWD/cypress:/app/cypress -v $PWD/cypress.config.js:/app/cypress.config.js jaimesalas/e2e npm run cypress:run",
+                                        returnStdout: false
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
