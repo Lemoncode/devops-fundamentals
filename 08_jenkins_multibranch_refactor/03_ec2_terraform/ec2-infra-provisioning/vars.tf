@@ -28,7 +28,7 @@ variable "private_instance_ip" {
 
 variable "ami" {
   type    = string
-  default = "ami-02d0b1ffa5f16402d"
+  default = "ami-016d14ff69436351f"
 }
 
 variable "key_name" {
@@ -38,5 +38,5 @@ variable "key_name" {
 
 variable "instance_type" {
     type = string 
-    default = "t3.micro"
+    default = "t4g.micro"
 }

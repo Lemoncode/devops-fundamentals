@@ -17,6 +17,9 @@ Amazon Linux 2 comes with five years support. It provides Linux kernel 5.10 tune
 
 It's important that you also take care on how are you going to run containers in order to choose the AMI. Recall, unless you do muti architecture builds, your containers will only run on the same architecture as you built them.
 
+- Instance Type x86 - t3.micro
+- Instance Type arm - t4g.micro
+
 ## Running Terraform
 
 ### Setup Credentials

@@ -12,7 +12,7 @@ resource "aws_network_interface" "lc_www1_eth0" {
 
 # Elastic IP Address
 resource "aws_eip" "lc_www1_eip" {
-  vpc = true
+  domain = "vpc"
   depends_on = [
     aws_internet_gateway.lc_igw
   ]
