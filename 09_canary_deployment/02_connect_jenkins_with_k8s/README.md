@@ -7,8 +7,8 @@
 We are going to create a file that will contain the credentials in order to make that Jenkins can connect with our cluster.
 
 ```bash
-$ mkdir kube-config
-$ touch kube-config/config
+mkdir kube-config
+touch kube-config/config
 ```
 
 Copy the contents on `~/.kube/config` into `kube-config/config` 
