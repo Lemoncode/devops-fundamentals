@@ -34,7 +34,7 @@ We'll modify the `Jenkinsfile` to add a `when` condition for our step `Build ima
       stage('Install dependencies') {
         agent {
           docker {
-            image 'node:14-alpine'
+            image 'node:20-alpine'
             reuseNode true
           }
         }
@@ -45,7 +45,7 @@ We'll modify the `Jenkinsfile` to add a `when` condition for our step `Build ima
       stage('Tests') {
         agent {
           docker {
-            image 'node:14-alpine'
+            image 'node:20-alpine'
             reuseNode true
           }
         }
@@ -206,15 +206,15 @@ We can check now in the browser going to the EC2 host the endpoint works.
 
 ### Sync up branches
 
-It's time to merge `develop` into `master` to apply the new `Jenkinsfile`.
+It's time to merge `develop` into `main` to apply the new `Jenkinsfile`.
 
 ```bash
-git checkout master
-git merge develop master
+git checkout main
+git merge develop main
 git push
 ```
 
-Notice now in `master` after the build finish how the steps we allowed to `develop` branch are skip now.
+Notice now in `main` after the build finish how the steps we allowed to `develop` branch are skip now.
 
 ![BlueOcean master](../readme-resources/03-blueocean-master.png)
 

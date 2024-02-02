@@ -2,6 +2,8 @@ pipeline {
   agent any
   environment {
     imageName = 'myuser/my-api-app:latest'
+    ec2Instance = 'myec2-instance.compute.awscloud.com'
+    appPort = 80
   }
   stages {
     stage('Install dependencies') {
@@ -26,6 +28,23 @@ pipeline {
         sh 'npm test'
       }
     }
+    stage('E2E Tests') {
+      when {
+        branch 'staging'
+      }
+      agent {
+        docker {
+          image 'node:20-alpine'
+          reuseNode true
+        }
+      }
+      environment {
+        BASE_API_URL = "http://$ec2Instance:$appPort"
+      }
+      steps {
+        sh 'npm run test:e2e'
+      }
+    }
     stage('Build image & push it to DockerHub') {
       when {
         branch 'develop'
@@ -45,23 +64,21 @@ pipeline {
         branch 'develop'
       }
       environment {
-        containerName = 'my-api-app'
-        ec2Instance = 'myec2-instance.compute.awscloud.com'
-        appPort = 80
+        CONTAINER_NAME = 'my-api-app'
       }
       steps {
         withCredentials(
-          bindings: [sshUserPrivateKey(
+          sshUserPrivateKey(
             credentialsId: 'ec2-ssh-credentials',
             keyFileVariable: 'identityFile',
             passphraseVariable: 'passphrase',
             usernameVariable: 'user'
           )
-        ]) {
+        ) {
           script {
             sh '''
               ssh -o StrictHostKeyChecking=no -i $identityFile $user@$ec2Instance \
-              APP_PORT=$appPort CONTAINER_NAME=$containerName IMAGE_NAME=$imageName bash < ./scripts/deploy.sh
+              APP_PORT=$APP_PORT CONTAINER_NAME=$CONTAINER_NAME IMAGE_NAME=$imageName bash < ./scripts/deploy.sh
             '''
           }
         }
