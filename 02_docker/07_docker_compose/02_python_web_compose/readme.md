@@ -28,9 +28,7 @@ def hello():
     return 'Hello World! I have been seen {} times.\n'.format(count)
 ```
 
-
 > Note the way the get_hit_count function is written. This basic retry loop lets us attempt our request multiple times if the redis service is not available. This is useful at startup while the application comes online, but also makes our application more resilient if the Redis service needs to be restarted anytime during the app’s lifetime. In a cluster, this also helps handling momentary connection drops between nodes.
-
 
 ```Dockerfile
 FROM python:3.7-alpine
@@ -53,15 +51,14 @@ COPY app.py app.py
 CMD [ "flask", "run" ]
 ```
 
-* Build an image starting with the Python 3.7 image.
-* Set the working directory to /code.
-* Set environment variables used by the flask command.
-* Install gcc and other dependencies
-* Copy requirements.txt and install the Python dependencies.
-* Add metadata to the image to describe that the container is listening on port 5000
-* Copy the current `app.py` in the project to the workdir `app.py` in the image.
-* Set the default command for the container to flask run.
-
+- Build an image starting with the Python 3.7 image.
+- Set the working directory to /code.
+- Set environment variables used by the flask command.
+- Install gcc and other dependencies
+- Copy requirements.txt and install the Python dependencies.
+- Add metadata to the image to describe that the container is listening on port 5000
+- Copy the current `app.py` in the project to the workdir `app.py` in the image.
+- Set the default command for the container to flask run.
 
 ```yml
 version: "3.8"

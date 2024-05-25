@@ -12,7 +12,7 @@ $ vagrant ssh
 Desde dentro de la VM, contruimos nuestra aplicación
 
 ```bash
-$ docker build -t myapp .
+docker build -t myapp .
 ```
 
 Ahora podemos ejecutar nuestra aplicación:
@@ -93,10 +93,10 @@ ADD ./nginx.conf /etc/nginx/
 Create multiple instances
 
 ```bash
-$ docker build -t myapp .
-$ docker run -d --rm -p 8081:8080 myapp
-$ docker run -d --rm -p 8082:8080 myapp
-$ docker run -d --rm -p 8083:8080 myapp
+docker build -t myapp .
+docker run -d --rm -p 8081:8080 myapp
+docker run -d --rm -p 8082:8080 myapp
+docker run -d --rm -p 8083:8080 myapp
 ```
 
 We can check that the apps are up and running
@@ -110,25 +110,25 @@ http://localhost:8083
 Now we can build our load balancer
 
 ```bash
-$ docker build -t myloadbalancer .
+docker build -t myloadbalancer .
 ```
 
 And run the balancer as follows
 
 ```bash
-$ docker run -d --net=host --name mylb myloadbalancer
+docker run -d --net=host --name mylb myloadbalancer
 ```
 
 Check the load balancer
 
 ```bash
-$ curl http://localhost/
+curl http://localhost/
 ```
 
 Let's do another load test
 
 ```bash
-$ ab -n 1000 -c 100 http://localhost/
+ab -n 1000 -c 100 http://localhost/
 ```
 
 ```bash

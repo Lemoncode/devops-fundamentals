@@ -122,13 +122,13 @@ $ docker tag ...
 1. `tag` the image with Docker Hub user
 
 ```bash
-$ docker tag myapp <user>/myapp
+docker tag myapp <user>/myapp
 ```
 
 2. `push` with the image tagged with our Docker Hub user
 
 ```bash
-$ docker push <user>/myapp
+docker push <user>/myapp
 ```
 
 We can access our user, using the following `url`

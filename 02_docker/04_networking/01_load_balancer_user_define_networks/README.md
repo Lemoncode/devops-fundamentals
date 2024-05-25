@@ -176,7 +176,7 @@ docker run -d --rm --net=mybridge -p 80:80 \
 Si volvemos a inspeccionar la red deberíamos de ver el contenedor `mylb`
 
 ```bash
-$ docker network inspect mybridge
+docker network inspect mybridge
 ```
 
 ```bash

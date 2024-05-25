@@ -1,6 +1,6 @@
 ## Overview of Docker Compose
 
-Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. 
+Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
 
 ### Docker Compose References
 
@@ -8,16 +8,14 @@ Compose is a tool for defining and running multi-container Docker applications. 
 
 ### Common use cases
 
-* Development environments
-* Automated testing environments
-* Single host deployments
+- Development environments
+- Automated testing environments
+- Single host deployments
 
-
-* Using Compose is basically a three-step process:
-    1. Define your app's environment with a `Dockerfile` so it can be reproduced anywhere
-    2. Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
-    3. Run docker-compose up and Compose starts and runs your entire app.
-
+- Using Compose is basically a three-step process:
+  1. Define your app's environment with a `Dockerfile` so it can be reproduced anywhere
+  2. Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
+  3. Run docker-compose up and Compose starts and runs your entire app.
 
 ```yaml
 version: "3.8"
@@ -68,7 +66,6 @@ docker-compose -f docker-compose.00_nginx.yml stop
 docker-compose -f docker-compose.00_nginx.yml kill
 ```
 
-
 ### Docker Compose Start
 
 ```bash
@@ -105,17 +102,16 @@ docker-compose ps
 ### Docker Compose List Processes
 
 ```bash
-docker-compose top 
+docker-compose top
 ```
 
 ### Docker Compose Down
 
-
 ```bash
-docker-compose down 
+docker-compose down
 ```
 
-###  Docker Compose CMD
+### Docker Compose CMD
 
 We can also `override` for a given service the contianer's `CMD`
 
@@ -153,7 +149,7 @@ nginx:
 
 ## Docker Compose Apps Examples
 
-### Python Web 
+### Python Web
 
 1. Create a new file `app.py`
 
@@ -183,7 +179,7 @@ def hello():
     return 'Hello World! I have been seen {} times.\n'.format(count)
 ```
 
-2. Create  another file called `requirements.txt`
+2. Create another file called `requirements.txt`
 
 ```
 flask
@@ -215,7 +211,7 @@ CMD [ "flask", "run" ]
 
 4. Define services in a Compose file
 
-* Create `docker-compose.yml` as follows:
+- Create `docker-compose.yml` as follows:
 
 ```yml
 version: "3.8"
@@ -255,7 +251,7 @@ services:
 
 The new `volumes` key mounts the project directory (current directory) on the host to `/code` inside the container, allowing you to modify the code on the fly, without having to rebuild the image. The environment key sets the FLASK_ENV environment variable, which tells flask run to run in development mode and reload the code on change. This mode should only be used in development.
 
-7. Update the application.  Modify `app.py` as follows to realise that the application is updated on the fly:
+7. Update the application. Modify `app.py` as follows to realise that the application is updated on the fly:
 
 ```diff
 import time
@@ -290,9 +286,9 @@ def hello():
 $ docker-compose -d
 ...
 $ docker-compose ps
-            Name                           Command               State           Ports         
+            Name                           Command               State           Ports
 -----------------------------------------------------------------------------------------------
-02_python_web_compose_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp              
+02_python_web_compose_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp
 02_python_web_compose_web_1     flask run                        Up      0.0.0.0:5000->5000/tcp
 ```
 
