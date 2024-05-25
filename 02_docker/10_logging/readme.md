@@ -2,6 +2,7 @@
 
 - https://grafana.com/docs/loki/latest/getting-started/
 - https://github.com/grafana/loki/tree/main/examples/getting-started
+- [Docker - Container Logs](https://docs.docker.com/config/containers/logging/)
 
 ## Articles
 
