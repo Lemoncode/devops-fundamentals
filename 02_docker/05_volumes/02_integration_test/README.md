@@ -70,44 +70,41 @@ module.exports.client = client;
 Create `index.spec.js`
 
 ```js
-require('dotenv').config();
+require("dotenv").config();
 
-const assert = require('assert');
-const { client } = require('./dbConnection');
+const assert = require("assert");
+const { client } = require("./dbConnection");
 
 const expectedElements = [
-    {
-      id: 12,
-      title: 'Learn Jenkins',
-      completed: false,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    },
-    {
-      id: 13,
-      title: 'Learn GitLab',
-      completed: true,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    },
-    {
-      id: 21,
-      title: 'Learn K8s',
-      completed: false,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    }
-  ];
+  {
+    id: 12,
+    title: "Learn Jenkins",
+    completed: false,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+  {
+    id: 13,
+    title: "Learn GitLab",
+    completed: true,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+  {
+    id: 21,
+    title: "Learn K8s",
+    completed: false,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+];
 
-const test = async() => {
-    client.connect();
-    client.query('SELECT * FROM todos', (err, {rows}) => {
-        assert.deepStrictEqual(rows, expectedElements);
-        client.end();
-    });
-};
-
-test();
+(async () => {
+  await client.connect();
+  const { rows } = await client.query("SELECT * FROM todos");
+  assert.deepStrictEqual(rows, expectedElements);
+  await client.end();
+})();
 ```
 
 Let's start the database using our script
@@ -144,52 +141,51 @@ But if we run the tests now, we get an error **TypeError: Cannot destructure pro
 Edit `index.spec.js`
 
 ```diff
-require('dotenv').config();
+require("dotenv").config();
 
-const assert = require('assert');
-const { client } = require('./dbConnection');
+const assert = require("assert");
+const { client } = require("./dbConnection");
 
 const expectedElements = [
-    {
-      id: 12,
-      title: 'Learn Jenkins',
-      completed: false,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    },
-    {
-      id: 13,
-      title: 'Learn GitLab',
-      completed: true,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    },
-    {
-      id: 21,
-      title: 'Learn K8s',
-      completed: false,
-      due_date: new Date('2020-12-04T18:37:44.234Z'),
-      order: null
-    }
-  ];
+  {
+    id: 12,
+    title: "Learn Jenkins",
+    completed: false,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+  {
+    id: 13,
+    title: "Learn GitLab",
+    completed: true,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+  {
+    id: 21,
+    title: "Learn K8s",
+    completed: false,
+    due_date: new Date("2020-12-04T18:37:44.234Z"),
+    order: null,
+  },
+];
 +
 +const delay = (time = 0) => {
-+   return new Promise((resolve) => {
-+       setTimeout(() => {
-+           resolve();
-+       }, time);
-+   })
-+} 
++ return new Promise((resolve) => {
++   setTimeout(() => {
++     resolve();
++   }, time);
++ });
++};
 +
-const test = async() => {
-+   await delay(30_000);
-    client.connect();
-    client.query('SELECT * FROM todos', (err, {rows}) => {
-        assert.deepStrictEqual(rows, expectedElements);
-        client.end();
-    });
-};
-
-test();
+(async () => {
++ await delay(10_000)
+  await client.connect();
+  const { rows } = await client.query("SELECT * FROM todos");
+  assert.deepStrictEqual(rows, expectedElements);
+  await client.end();
+})();
 
 ```
+
+> EXERCISE: Create `posttest` script that removes the database container.

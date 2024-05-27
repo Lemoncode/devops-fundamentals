@@ -2,11 +2,13 @@
 
 > Para esta demo usaremos una imagen de Ubuntu, ya que sólo en Linux, tenemos disponoibles la red `host`
 
+> NOTA: A partir de la versión 4.29 de Docker Desktop es posible habilitar, seguir los pasos en el [enlace](https://docs.docker.com/network/drivers/host/#docker-desktop)
+
 Levantamos la VM y nos conectamos a ella:
 
 ```bash
-$ vagrant up
-$ vagrant ssh
+vagrant up
+vagrant ssh
 ```
 
 Desde dentro de la VM, contruimos nuestra aplicación
@@ -18,13 +20,13 @@ docker build -t myapp .
 Ahora podemos ejecutar nuestra aplicación:
 
 ```bash
-$ docker run -d --rm -p 8080:8080 --name myapp myapp
+docker run -d --rm -p 8080:8080 --name myapp myapp
 ```
 
 We can make a simple load testing by
 
 ```bash
-$ ab -n 1000 -c 100 http://localhost:8080/
+ab -n 1000 -c 100 http://localhost:8080/
 ```
 
 ```bash
@@ -102,14 +104,16 @@ docker run -d --rm -p 8083:8080 myapp
 We can check that the apps are up and running
 
 ```
-http://localhost:8081
-http://localhost:8082
-http://localhost:8083
+curl http://localhost:8081
+curl http://localhost:8082
+curl http: //localhost:8083
 ```
 
 Now we can build our load balancer
 
 ```bash
+cd nginx
+
 docker build -t myloadbalancer .
 ```
 
