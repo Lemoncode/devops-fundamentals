@@ -11,7 +11,6 @@ scrape_configs:
 ```
 
 ```yaml
-version: '3.6'
 services:
   cadvisor:
     privileged: true

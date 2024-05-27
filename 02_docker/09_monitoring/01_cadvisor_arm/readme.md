@@ -1,3 +1,4 @@
+To make it work out of Linux, we're going to build a new image:
 
 ```Dockerfile
 FROM golang:buster AS builder
@@ -39,7 +40,6 @@ ENTRYPOINT ["/usr/bin/cadvisor", "-logtostderr"]
 ```
 
 ```yaml
-version: '3.6'
 services:
   cadvisor:
     privileged: true
@@ -79,5 +79,5 @@ services:
 ```
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```

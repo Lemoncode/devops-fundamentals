@@ -44,44 +44,44 @@ volumes:
 From the root folder where is the `docker-compose.yml` we can start to user `docker-compose` commands.
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 The matter with this, is what happen when we have more than a docker-compose file, we can use the flag `-f` to specify the file
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml up
+docker compose -f docker-compose.00_nginx.yml up
 ```
 
 If we want that our service run on detach mode we can use `-d` flag.
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml up -d
+docker compose -f docker-compose.00_nginx.yml up -d
 ```
 
 ### Docker Compose Stop/Kill
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml stop
-docker-compose -f docker-compose.00_nginx.yml kill
+docker compose -f docker-compose.00_nginx.yml stop
+docker compose -f docker-compose.00_nginx.yml kill
 ```
 
 ### Docker Compose Start
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml start
+docker compose -f docker-compose.00_nginx.yml start
 ```
 
 ### Docker Compose Restart
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml restart
+docker compose -f docker-compose.00_nginx.yml restart
 ```
 
 ### Docker Compose Logs
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml logs -f
+docker compose -f docker-compose.00_nginx.yml logs -f
 ```
 
 ### Docker Compose Validations
@@ -89,26 +89,26 @@ docker-compose -f docker-compose.00_nginx.yml logs -f
 > Introduce an error on ports entry
 
 ```bash
-docker-compose -f docker-compose.01_wrong_config.yml config
+docker compose -f docker-compose.01_wrong_config.yml config
 ERROR: In file './docker-compose.01_wrong_config.yml', service 'ports' must be a mapping not an array.
 ```
 
 ### Docker Compose List Containers
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Docker Compose List Processes
 
 ```bash
-docker-compose top
+docker compose top
 ```
 
 ### Docker Compose Down
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### Docker Compose CMD
@@ -160,7 +160,7 @@ import redis
 from flask import Flask
 
 app = Flask(__name__)
-cache = redis.Redis(host='redis', port=6739)
+cache = redis.Redis(host='redis', port=6379)
 
 def get_hit_count():
     retries = 5
@@ -173,7 +173,7 @@ def get_hit_count():
             retries -= 1
             time.sleep(0.5)
 
-@app.routes('/')
+@app.route('/')
 def hello():
     count = get_hit_count()
     return 'Hello World! I have been seen {} times.\n'.format(count)
@@ -194,6 +194,7 @@ FROM python:3.7-alpine
 WORKDIR /code
 
 ENV FLASK_APP=app.py
+
 ENV FLASK_RUN_HOST=0.0.0.0
 
 RUN apk add --no-cache gcc musl-dev linux-headers
@@ -214,7 +215,6 @@ CMD [ "flask", "run" ]
 - Create `docker-compose.yml` as follows:
 
 ```yml
-version: "3.8"
 services:
   web:
     build: .
@@ -229,13 +229,14 @@ We define two services: `web` and `redis`
 5. Build and run your app with Compose
 
 ```bash
-docker-compose up
+docker compose up
 ```
+
+We can open a browser and visit `http://localhost:5000`, notice that if we refresh the app, the counter increments. We have a warning from `Flask`
 
 6. Edit the Compose file to add a bind mount
 
 ```diff
-version: "3.8"
 services:
   web:
     build: .
@@ -283,9 +284,9 @@ def hello():
 8. Experiment with some other commands
 
 ```bash
-$ docker-compose -d
+docker compose up -d
 ...
-$ docker-compose ps
+docker compose ps
             Name                           Command               State           Ports
 -----------------------------------------------------------------------------------------------
 02_python_web_compose_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp
@@ -295,7 +296,10 @@ $ docker-compose ps
 The docker-compose run command allows you to run one-off commands for your services. For example, to see what environment variables are available to the web service:
 
 ```bash
-$ docker-compose run web env
+docker compose run web env
+```
+
+```
 Creating 02_python_web_compose_web_run ... done
 PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=4c22f7eec4b0
@@ -312,10 +316,12 @@ FLASK_RUN_HOST=0.0.0.0
 HOME=/root
 ```
 
+We can also get `down` a single service
+
 ```bash
-docker-compose down stop
+docker compose down web
 ```
 
 ```bash
-docker-compose down --volumes
+docker compose down --volumes
 ```
