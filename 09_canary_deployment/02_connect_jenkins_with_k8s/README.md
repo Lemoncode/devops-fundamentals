@@ -4,11 +4,11 @@
 
 ### 1. Grab credentials
 
-We are going to create a file that will contain the credentials in orderto make that Jenkins can connect with our cluster.
+We are going to create a file that will contain the credentials in order to make that Jenkins can connect with our cluster.
 
 ```bash
-$ mkdir kube-config
-$ touch kube-config/config
+mkdir kube-config
+touch kube-config/config
 ```
 
 Copy the contents on `~/.kube/config` into `kube-config/config` 
@@ -42,7 +42,7 @@ clusterrolebinding.rbac.authorization.k8s.io/cluster-system-anonymous created
 docker exec -it jenkins-blueocean bash
 ```
 
-Access to AWS IAM credentials that you have used to create teh cluster, if are the same in your system, you can find out by:
+Access to AWS IAM credentials that you have used to create the cluster, if are the same in your system, you can find out by:
 
 ```bash
 $ cat ~/.aws/credentials 

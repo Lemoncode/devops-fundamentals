@@ -4,7 +4,7 @@ kind: ClusterConfig
 metadata:
   name: lc-cluster
   region: eu-west-3
-  version: "1.18"
+  version: "1.28"
 
 managedNodeGroups:
   - name: lc-nodes

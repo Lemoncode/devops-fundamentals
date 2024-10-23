@@ -1,6 +1,6 @@
 ## Overview of Docker Compose
 
-Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. 
+Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
 
 ### Docker Compose References
 
@@ -8,16 +8,14 @@ Compose is a tool for defining and running multi-container Docker applications. 
 
 ### Common use cases
 
-* Development environments
-* Automated testing environments
-* Single host deployments
+- Development environments
+- Automated testing environments
+- Single host deployments
 
-
-* Using Compose is basically a three-step process:
-    1. Define your app's environment with a `Dockerfile` so it can be reproduced anywhere
-    2. Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
-    3. Run docker-compose up and Compose starts and runs your entire app.
-
+- Using Compose is basically a three-step process:
+  1. Define your app's environment with a `Dockerfile` so it can be reproduced anywhere
+  2. Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
+  3. Run docker-compose up and Compose starts and runs your entire app.
 
 ```yaml
 version: "3.8"
@@ -46,45 +44,44 @@ volumes:
 From the root folder where is the `docker-compose.yml` we can start to user `docker-compose` commands.
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 The matter with this, is what happen when we have more than a docker-compose file, we can use the flag `-f` to specify the file
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml up
+docker compose -f docker-compose.00_nginx.yml up
 ```
 
 If we want that our service run on detach mode we can use `-d` flag.
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml up -d
+docker compose -f docker-compose.00_nginx.yml up -d
 ```
 
 ### Docker Compose Stop/Kill
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml stop
-docker-compose -f docker-compose.00_nginx.yml kill
+docker compose -f docker-compose.00_nginx.yml stop
+docker compose -f docker-compose.00_nginx.yml kill
 ```
-
 
 ### Docker Compose Start
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml start
+docker compose -f docker-compose.00_nginx.yml start
 ```
 
 ### Docker Compose Restart
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml restart
+docker compose -f docker-compose.00_nginx.yml restart
 ```
 
 ### Docker Compose Logs
 
 ```bash
-docker-compose -f docker-compose.00_nginx.yml logs -f
+docker compose -f docker-compose.00_nginx.yml logs -f
 ```
 
 ### Docker Compose Validations
@@ -92,30 +89,29 @@ docker-compose -f docker-compose.00_nginx.yml logs -f
 > Introduce an error on ports entry
 
 ```bash
-docker-compose -f docker-compose.01_wrong_config.yml config
+docker compose -f docker-compose.01_wrong_config.yml config
 ERROR: In file './docker-compose.01_wrong_config.yml', service 'ports' must be a mapping not an array.
 ```
 
 ### Docker Compose List Containers
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Docker Compose List Processes
 
 ```bash
-docker-compose top 
+docker compose top
 ```
 
 ### Docker Compose Down
 
-
 ```bash
-docker-compose down 
+docker compose down
 ```
 
-###  Docker Compose CMD
+### Docker Compose CMD
 
 We can also `override` for a given service the contianer's `CMD`
 
@@ -153,7 +149,7 @@ nginx:
 
 ## Docker Compose Apps Examples
 
-### Python Web 
+### Python Web
 
 1. Create a new file `app.py`
 
@@ -164,7 +160,7 @@ import redis
 from flask import Flask
 
 app = Flask(__name__)
-cache = redis.Redis(host='redis', port=6739)
+cache = redis.Redis(host='redis', port=6379)
 
 def get_hit_count():
     retries = 5
@@ -177,13 +173,13 @@ def get_hit_count():
             retries -= 1
             time.sleep(0.5)
 
-@app.routes('/')
+@app.route('/')
 def hello():
     count = get_hit_count()
     return 'Hello World! I have been seen {} times.\n'.format(count)
 ```
 
-2. Create  another file called `requirements.txt`
+2. Create another file called `requirements.txt`
 
 ```
 flask
@@ -198,6 +194,7 @@ FROM python:3.7-alpine
 WORKDIR /code
 
 ENV FLASK_APP=app.py
+
 ENV FLASK_RUN_HOST=0.0.0.0
 
 RUN apk add --no-cache gcc musl-dev linux-headers
@@ -215,10 +212,9 @@ CMD [ "flask", "run" ]
 
 4. Define services in a Compose file
 
-* Create `docker-compose.yml` as follows:
+- Create `docker-compose.yml` as follows:
 
 ```yml
-version: "3.8"
 services:
   web:
     build: .
@@ -233,13 +229,14 @@ We define two services: `web` and `redis`
 5. Build and run your app with Compose
 
 ```bash
-docker-compose up
+docker compose up
 ```
+
+We can open a browser and visit `http://localhost:5000`, notice that if we refresh the app, the counter increments. We have a warning from `Flask`
 
 6. Edit the Compose file to add a bind mount
 
 ```diff
-version: "3.8"
 services:
   web:
     build: .
@@ -255,7 +252,7 @@ services:
 
 The new `volumes` key mounts the project directory (current directory) on the host to `/code` inside the container, allowing you to modify the code on the fly, without having to rebuild the image. The environment key sets the FLASK_ENV environment variable, which tells flask run to run in development mode and reload the code on change. This mode should only be used in development.
 
-7. Update the application.  Modify `app.py` as follows to realise that the application is updated on the fly:
+7. Update the application. Modify `app.py` as follows to realise that the application is updated on the fly:
 
 ```diff
 import time
@@ -287,19 +284,22 @@ def hello():
 8. Experiment with some other commands
 
 ```bash
-$ docker-compose -d
+docker compose up -d
 ...
-$ docker-compose ps
-            Name                           Command               State           Ports         
+docker compose ps
+            Name                           Command               State           Ports
 -----------------------------------------------------------------------------------------------
-02_python_web_compose_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp              
+02_python_web_compose_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp
 02_python_web_compose_web_1     flask run                        Up      0.0.0.0:5000->5000/tcp
 ```
 
 The docker-compose run command allows you to run one-off commands for your services. For example, to see what environment variables are available to the web service:
 
 ```bash
-$ docker-compose run web env
+docker compose run web env
+```
+
+```
 Creating 02_python_web_compose_web_run ... done
 PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=4c22f7eec4b0
@@ -316,10 +316,12 @@ FLASK_RUN_HOST=0.0.0.0
 HOME=/root
 ```
 
+We can also get `down` a single service
+
 ```bash
-docker-compose down stop
+docker compose down web
 ```
 
 ```bash
-docker-compose down --volumes
+docker compose down --volumes
 ```

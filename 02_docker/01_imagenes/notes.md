@@ -60,14 +60,13 @@ CMD [ "python3", "server.py" ]
 
 ### FROM
 
-* `FROM` inicializa un nuevo escenario de `build` y establece la `Base Image` para las siguientes instrucciones. Un `Dockerfile` para que sea válido debe _comenzar_ con la instrucción `FROM`, sólo pudiendo ser precedida por `ARG`.
+- `FROM` inicializa un nuevo escenario de `build` y establece la `Base Image` para las siguientes instrucciones. Un `Dockerfile` para que sea válido debe _comenzar_ con la instrucción `FROM`, **sólo pudiendo ser precedida por `ARG`**.
 
-* `FROM` puede aparecer múltiples veces dentro de un mismo `Dockerfile`, para crear múltiples imágenes o usar un `build stage` como dependencia de otro. Cada `FROM` limpia cualquier estado creado previo.
+- `FROM` puede aparecer múltiples veces dentro de un mismo `Dockerfile`, para crear múltiples imágenes o usar un `build stage` como dependencia de otro. Cada `FROM` limpia cualquier estado creado previo.
 
-* Podemos nombrar los `build stages` añadiendo `AS name` a la instrucción `FROM`. El nombre puede ser usado en los siguientes `FROM` por ejemplo `COPY --from=<name>`
+- Podemos nombrar los `build stages` añadiendo `AS name` a la instrucción `FROM`. El nombre puede ser usado en los siguientes `FROM` por ejemplo `COPY --from=<name>`
 
-
-[FROM reference](https://docs.docker.com/engine/reference/builder/#from) 
+[FROM reference](https://docs.docker.com/engine/reference/builder/#from)
 
 ```Dockerfile
 FROM ubuntu:18.04
@@ -79,16 +78,15 @@ FROM node:6.17.0-stretch-slim
 ...
 ```
 
-
 ### RUN
 
 [RUN reference](https://docs.docker.com/engine/reference/builder/#run)
 
-* Tiene dos formatos:
-    - `RUN <commad>` (shell form)
-    - `RUN ["executable", "param1", "param2"]` (exec form)
+- Tiene dos formatos:
+  - `RUN <commad>` (shell form)
+  - `RUN ["executable", "param1", "param2"]` (exec form)
 
-La instrrucción `RUN` ejecutará cualquier comando en una nueva capa sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`. 
+La instrrucción `RUN` ejecutará cualquier comando en una nueva capa sobre la imagen actual. El resultado anterior será usado para el próximo paso en el `Dockerfile`.
 
 > Layering RUN instructions and generating commits conforms to the core concepts of Docker where commits are cheap and containers can be created from any point in an image’s history, much like source control.
 
@@ -108,7 +106,7 @@ RUN cargo build
 RUN MIX_ENV=prod mix release
 ```
 
-### COPY    
+### COPY
 
 [COPY reference](https://docs.docker.com/engine/reference/builder/#copy)
 
@@ -150,7 +148,7 @@ ENV CONFIGURATION ./default.cfg
 
 [WORKDIR reference](https://docs.docker.com/engine/reference/builder/#workdir)
 
-`WORKDIR` establece el directorio de trabajo para RUN, CMD, ENTRYPOINT, COPY y ADD que la siga en un `Dockerfile`. Si el `WORKDIR` no existe, será creado incluso si no se usa en sucesivas instrucciones.
+`WORKDIR` establece el directorio de trabajo para `RUN`, `CMD`, `ENTRYPOINT`, `COPY` y `ADD` que la siga en un `Dockerfile`. Si el `WORKDIR` no existe, será creado incluso si no se usa en sucesivas instrucciones.
 
 La instrucción `WORKDIR` puede ser usada múltiples veces en un `Dockerfile`. Si se provee una ruta relativa, será relativa a la instrucción `WORKDIR` previa. Por ejemplo:
 
@@ -188,11 +186,11 @@ EXPOSE 80/udp
 
 [ENTRYPOINT reference](https://docs.docker.com/engine/reference/builder/#entrypoint)
 
-* Tiene dos formatos:
-    - El _exec form_: `ENTRYPOINT ["executable", "param1", "param2"]`
-    - El _shell form_: `ENTRYPOINT command param1 param2`
+- Tiene dos formatos:
+  - El _exec form_: `ENTRYPOINT ["executable", "param1", "param2"]`
+  - El _shell form_: `ENTRYPOINT command param1 param2`
 
-`ENTRYPOINT` permite configurar un contenedor que se ejucatará como `executable` 
+`ENTRYPOINT` permite configurar un contenedor que se ejucatará como `executable`
 
 ```Dockerfile
 ...
@@ -205,14 +203,15 @@ ENTRYPOINT python3 /opt/app/main.py
 
 [CMD reference](https://docs.docker.com/engine/reference/builder/#cmd)
 
-* La instrucción `CMD` tiene tres formas:
-    * CMD ["executable","param1","param2"] (exec form, this is the preferred form)
-    * CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
-    * CMD command param1 param2 (shell form)
+- La instrucción `CMD` tiene tres formas:
 
-* Sólo puede haber una instrucción `CMD` por `Dockerfile`. Si hay más de un `CMD`, sólo el último tomará efecto.
+  - CMD ["executable","param1","param2"] (exec form, this is the preferred form)
+  - CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
+  - CMD command param1 param2 (shell form)
 
-> La _exec form_  es parseada como un array JSON, lo que signifcia que debemos usar `"` en vez `'`.
+- Sólo puede haber una instrucción `CMD` por `Dockerfile`. Si hay más de un `CMD`, sólo el último tomará efecto.
+
+> La _exec form_ es parseada como un array JSON, lo que signifcia que debemos usar `"` en vez `'`.
 
 ```Dockerfile
 ...
@@ -230,7 +229,6 @@ CMD /opt/app/main.py
 
 Ambas `CMD` y `ENTRYPOINT` definen que comandos se ejecutan cuando ejecutamos un contenedor. Existen algunas reglas que describen su cooperación.
 
-
 1. `Dockerfile` debe especificar al menos un `CMD` o `ENTRYPOINT`.
 
 2. `ENTRYPOINT` debe ser definido cuando nuestro contenedor va a ser usado como un ejecutable.
@@ -239,12 +237,12 @@ Ambas `CMD` y `ENTRYPOINT` definen que comandos se ejecutan cuando ejecutamos un
 
 4. `CMD` será sobrescrito cuando ejecutemos el contenedor con comandos alternativos.
 
-|                            |        No ENTRYPOINT       | ENTRYPOINT exec_entry p1_entry | ENTRYPOINT ["exec_entry", "p1_entry"]          |
-|:--------------------------:|:--------------------------:|--------------------------------|------------------------------------------------|
-|           No CMD           |     error, not allowed     | /bin/sh -c exec_entry p1_entry |               exec_entry p1_entry              |
-| CMD ["exec_cmd", "p1_cmd"] |       exec_cmd p1_cmd      | /bin/sh -c exec_entry p1_entry |       exec_entry p1_entry exec_cmd p1_cmd      |
-| CMD ["p1_cmd", "p2_cmd"]   |        p1_cmd p2_cmd       | /bin/sh -c exec_entry p1_entry |        exec_entry p1_entry p1_cmd p2_cmd       |
-|     CMD exec_cmd p1_cmd    | /bin/sh -c exec_cmd p1_cmd | /bin/sh -c exec_entry p1_entry | exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd |
+|                            |       No ENTRYPOINT        | ENTRYPOINT exec_entry p1_entry | ENTRYPOINT ["exec_entry", "p1_entry"]          |
+| :------------------------: | :------------------------: | ------------------------------ | ---------------------------------------------- |
+|           No CMD           |     error, not allowed     | /bin/sh -c exec_entry p1_entry | exec_entry p1_entry                            |
+| CMD ["exec_cmd", "p1_cmd"] |      exec_cmd p1_cmd       | /bin/sh -c exec_entry p1_entry | exec_entry p1_entry exec_cmd p1_cmd            |
+|  CMD ["p1_cmd", "p2_cmd"]  |       p1_cmd p2_cmd        | /bin/sh -c exec_entry p1_entry | exec_entry p1_entry p1_cmd p2_cmd              |
+|    CMD exec_cmd p1_cmd     | /bin/sh -c exec_cmd p1_cmd | /bin/sh -c exec_entry p1_entry | exec_entry p1_entry /bin/sh -c exec_cmd p1_cmd |
 
 > NOTA: Si _CMD_ está definido desde la imagen base, establecer _ENTRYPOINT_ reseteará _CMD_ a un valor vacío. En este escenario, _CMD_ debe de ser definido en la imagen actual para tener un valor.
 

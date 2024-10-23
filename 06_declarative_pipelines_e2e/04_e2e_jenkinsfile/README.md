@@ -12,7 +12,7 @@ On root folder create a new `Jenkinsfile`
 def front 
 def back
 
-def withockerNetwork(Closure inner) {
+def withDockerNetwork(Closure inner) {
     try {
         networkId = UUID.randomUUID().toString();
         sh "docker network create ${networkId}";
@@ -115,5 +115,3 @@ pipeline {
 ```
 
 Create pipeline on CI server
-
-

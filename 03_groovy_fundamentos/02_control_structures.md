@@ -30,7 +30,7 @@ while (i < courseCount) {
 }
 ```
 
-There is one loop that, while very similar to the Java Syntex, is different than C sharp before each or for in loop in the foreign loop, we define init aerator value in the array to iterate and separate them with a colon like so.  
+There is one loop that, while very similar to the Java Syntax, is different than C sharp before each or for in loop in the foreign loop, we define init aerator value in the array to iterate and separate them with a colon like so.  
 
 ```groovy
 String[] singers = ["Bob", "George", "Jeff", "Roy", "Tom"]

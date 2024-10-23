@@ -162,8 +162,10 @@ services:
       DATABASE_POOL_MIN: 2
       DATABASE_POOL_MAX: 10
     depends_on:
-      - postgres
-      - seed
+      postgres:
+        condition: service_started
+      seed:
+        condition: service_completed_successfully
     networks:
       - integration-tests
   #..diff..#
@@ -176,7 +178,7 @@ Por último vamos a crear un script que corra los tests y limpie el entorno gene
 ```bash
 echo "start running tests" 
 
-docker-compose -f test-integration.yml up -d
+docker compose -f test-integration.yml up -d
 
 echo "tests in progress"
 
@@ -184,5 +186,5 @@ docker wait test-integration
 
 echo "clear resources"
 
-docker-compose -f test-integration.yml down --rmi all -v
+docker compose -f test-integration.yml down --rmi all -v
 ```

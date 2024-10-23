@@ -36,7 +36,7 @@ console.log(`Message: ${message}`);
 console.log(`Running on http://localhost ${PORT}`);
 ```
 
-Actualizamos packege.json
+Actualizamos package.json
 
 ```diff
 {

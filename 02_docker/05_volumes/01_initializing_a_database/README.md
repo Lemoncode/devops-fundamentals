@@ -101,7 +101,8 @@ docker run -d --name db1 jaimesalas/todos_db
 docker exec -it db1 psql -U postgres
 ```
 
-In `psql` console we run the following
+In `psql` console we run the following commands:
+
 ```
 \c todos_db
 SELECT * FROM todos;
@@ -138,12 +139,12 @@ SELECT * FROM todos;
 Ok, now let's clean previous container, and run again, what is going to happen with the last record that we've inserted?
 
 ```bash
-docker stop db1 && docker rm db1
+docker kill db1 && docker rm db1
 docker run -d --name db1 jaimesalas/todos_db
 docker exec -it db1 psql -U postgres
 ```
 
-Obviously the last record is not there, because remind, that all the times that this container, gets up, it will create a new `volume` and populate, with the inner `sql` script.
+Obviously the last record is not there, because remind, that all the times that this container, starts up, it will create a new `volume` and populate, with the inner `sql` script.
 
 To handle this situation, we can create a volume and recreate the previous steps
 
@@ -162,7 +163,7 @@ VALUES (22,	'Review AWS cli', 'false', '2020-12-12 18:37:44.234+00');
 If we clear the previous container
 
 ```bash
-docker stop db1 && docker rm db1
+docker kill db1 && docker rm db1
 ```
 
 And run it again we can check that the data is there

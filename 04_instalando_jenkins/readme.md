@@ -33,7 +33,7 @@ docker run \
 ### 3. Customise official Jenkins Docker image
 
 ```Dockerfile
-FROM jenkins/jenkins:2.393
+FROM jenkins/jenkins:2.426.3-jdk17
 
 USER root 
 
@@ -54,7 +54,6 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```bash
 docker build -t jenkins-blueocean .
 ```
-
 
 ### Run Jenkins
 

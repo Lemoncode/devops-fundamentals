@@ -6,7 +6,6 @@ We can create a backup that can be used later with `docker load`
 
 We can save the images as `.tar` or `.tar.gz`
 
-
 ```bash
 docker save busybox > busybox.tar
 ls -sh busybox.tar
@@ -29,7 +28,7 @@ docker load < busybox.tar
 
 We can also use `--input` flag instead `<`.
 
-This is no the way to work with images, there are better ways. 
+This is no the way to work with images, there are better ways.
 
 ## Docker Registry
 
@@ -39,9 +38,9 @@ This is no the way to work with images, there are better ways.
 
 ### Why use it
 
-* tightly control where your images are being stored
-* fully own your images distribution pipeline
-* integrate image storage and distribution tightly into your in-house development workflow
+- tightly control where your images are being stored
+- fully own your images distribution pipeline
+- integrate image storage and distribution tightly into your in-house development workflow
 
 As alternative, if we don't want to mantain our own registry we can found cloud solutions, and of course [Docker Hub]('https://hub.docker.com/)
 
@@ -84,7 +83,7 @@ docker login ...
 By default we're registering against Docker Hub, the following commands are equivalent
 
 ```bash
-docker login 
+docker login
 docker login docker.io
 docker login index.docker.io/v1/
 ```
@@ -92,7 +91,8 @@ docker login index.docker.io/v1/
 We can see our settings on `./.docker/config.json`
 
 ```bash
-$ cat ./.docker/config.json 
+cat ./.docker/config.json
+
 {
         "auths": {
                 "https://index.docker.io/v1/": {},
@@ -112,23 +112,23 @@ $ cat ./.docker/config.json
 We already know, that we can tag images using the following command
 
 ```bash
-$ docker tag ...
+docker tag ...
 ```
 
 ### Docker Hub Pull
 
-* If we want to push images to `Docker Hub`, we have to do the following steps
+- If we want to push images to `Docker Hub`, we have to do the following steps
 
 1. `tag` the image with Docker Hub user
 
 ```bash
-$ docker tag myapp <user>/myapp
+docker tag myapp <user>/myapp
 ```
 
 2. `push` with the image tagged with our Docker Hub user
 
 ```bash
-$ docker push <user>/myapp
+docker push <user>/myapp
 ```
 
 We can access our user, using the following `url`
@@ -142,15 +142,14 @@ google https://hub.docker.com/u/<user>
 To `pull` an image to Docker Hub, as well as with `push`, we have to prefix the image with the user
 
 ```bash
-$ docker pull <user>
+docker pull <user>
 ```
 
-
-cat .docker/config.json 
+cat .docker/config.json
 {
-        "auths": {
-                "localhost:5000": {
-                        "auth": "bWFudTptYW51"
-                }
-        }
+"auths": {
+"localhost:5000": {
+"auth": "bWFudTptYW51"
+}
+}
 }

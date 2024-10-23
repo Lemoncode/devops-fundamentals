@@ -34,7 +34,7 @@ kind: ClusterConfig
 metadata:
   name: lc-cluster
   region: eu-west-3
-  version: "1.18"
+  version: "1.28"
 
 managedNodeGroups:
   - name: lc-nodes
@@ -43,6 +43,14 @@ managedNodeGroups:
     minSize: 1
     maxSize: 3
 
+```
+
+Configure AWS CLI
+
+> You need AWS_ACCESS_KEY and AWS_ACCESS_SECRET_KEY
+
+```bash
+aws configure
 ```
 
 Start the cluster by running

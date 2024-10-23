@@ -28,7 +28,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN CG0_ENABLED=0 GOOS=linux go build .
+RUN go env -w GO111MODULE=off; \
+    CG0_ENABLED=0 GOOS=linux go build .
 
 EXPOSE 8080
 
@@ -46,7 +47,7 @@ docker run -p 8080:8080 mygoapp
 google localhost:8080/other/and/787
 ```
 
-Si comprobamos el pesoo de la imagen:
+Si comprobamos el peso de la imagen:
 
 ```
 REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
@@ -58,17 +59,18 @@ Vamos a refactorizar para reducir el tamaño de la imagen:
 ```Dockerfile
 FROM golang:latest AS builder
 
-WORKDIR /app
+WORKDIR /opt/app
 
 COPY . .
 
-RUN CG0_ENABLED=0 GOOS=linux go build .
+RUN go env -w GO111MODULE=off; \
+    CG0_ENABLED=0 GOOS=linux go build .
 
 FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /app .
+COPY --from=builder /opt/app .
 
 EXPOSE 8080
 
@@ -92,20 +94,4 @@ If we check the size of our image
 ```
 REPOSITORY                                      TAG                 IMAGE ID            CREATED              SIZE
 mygoapp                                         latest              5fc8a56092aa        12 seconds ago       13MB
-```
-
-```Dockerfile
-FROM golang:latest 
-
-WORKDIR /app
-
-COPY . .
-
-RUN go env -w GO111MODULE=off
-
-RUN CG0_ENABLED=0 GOOS=linux go build .
-
-EXPOSE 8080
-
-ENTRYPOINT ["./app"]
 ```

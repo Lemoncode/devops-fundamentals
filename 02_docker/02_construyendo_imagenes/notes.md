@@ -19,8 +19,7 @@ Nuestro `package.json` debería verse una cosa como esta:
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,28 @@ Nuestro `package.json` debería verse una cosa como esta:
   }
 }
 
+```
+
+Actualizamos `package.json` con un nuevo script para arrancar la aplicación:
+
+```diff
+{
+  "name": "00_node_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+-   "test": "echo \"Error: no test specified\" && exit 1"
++   "test": "echo \"Error: no test specified\" && exit 1",
++   "start": "node index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
 ```
 
 Creamos en el root _index.js_

@@ -30,7 +30,7 @@ pipeline {
         stage('Install dependencies') {
             agent {
                 docker {
-                    image 'node:14-alpine'
+                    image 'node:20-alpine'
                     reuseNode true
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
         stage('Tests') {
             agent {
                 docker {
-                    image 'node:14-alpine'
+                    image 'node:20-alpine'
                     reuseNode true
                 }
             }
@@ -55,7 +55,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'node:14-alpine'
+                    image 'node:20-alpine'
                     reuseNode true
                 }
             }
@@ -72,7 +72,9 @@ pipeline {
             }
             steps {
                 script {
+                    /*diff*/
                     def dockerImage = docker.build(imageName + ':latest')
+                    /*diff*/
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
                         dockerImage.push()
                         sh 'docker rmi $imageName'

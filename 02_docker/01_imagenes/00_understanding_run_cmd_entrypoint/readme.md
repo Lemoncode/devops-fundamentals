@@ -232,3 +232,7 @@ Simplemente ignora cualquier CMD o comando de linea.
 ## Referencias
 
 Esta demo está extaraida del siguiente artículo: https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/
+
+Otros enlaces de interes:
+
+- [What are shell form and exec form?](https://stackoverflow.com/questions/47904974/what-are-shell-form-and-exec-form)

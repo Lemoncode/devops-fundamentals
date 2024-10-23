@@ -55,10 +55,9 @@ services:
       DATABASE_POOL_MIN: 2
       DATABASE_POOL_MAX: 10
     depends_on:
-      - postgres
-      - seed
+      postgres:
+        condition: service_started
+      seed:
+        condition: service_completed_successfully
     networks:
       - integration-tests
-    
-
-    

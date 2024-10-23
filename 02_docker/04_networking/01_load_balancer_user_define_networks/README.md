@@ -176,7 +176,7 @@ docker run -d --rm --net=mybridge -p 80:80 \
 Si volvemos a inspeccionar la red deberíamos de ver el contenedor `mylb`
 
 ```bash
-$ docker network inspect mybridge
+docker network inspect mybridge
 ```
 
 ```bash
@@ -251,7 +251,12 @@ options ndots:0
 ```
 
 ```bash
-$ docker run --rm --net=mybridge busybox:1.28 ping -c 4 myapp1
+docker run --rm --net=mybridge busybox:1.28 ping -c 4 myapp1
+```
+
+La salida será similar a esta:
+
+```
 PING myapp1 (172.100.1.2): 56 data bytes
 64 bytes from 172.100.1.2: seq=0 ttl=64 time=0.291 ms
 64 bytes from 172.100.1.2: seq=1 ttl=64 time=0.099 ms
@@ -264,7 +269,10 @@ round-trip min/avg/max = 0.099/0.163/0.291 ms
 ```
 
 ```bash
-$ docker run --rm --net=mybridge busybox:1.28 nslookup myapp1
+docker run --rm --net=mybridge busybox:1.28 nslookup myapp1
+```
+
+```
 Server:    127.0.0.11
 Address 1: 127.0.0.11
 

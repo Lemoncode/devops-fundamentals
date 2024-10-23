@@ -190,7 +190,7 @@ docker inspect nginxtest
 
 Los `volume` son útiles para `backups`, `restore` y migraciones. Usamos el flag `--volumes-from` para crear un nuevo contenedor que monte ese volumen.
 
-Esto abre una puerta interesante, porque podemos especificar un `path` en el `host` donde podemos poner algunos ficheros, así cuando el contenedor arrancque y el `volume` es inicializado, el contenedor va a tener esos ficheros.
+Esto abre una puerta interesante, porque podemos especificar un `path` en el `host` donde podemos poner algunos ficheros, así cuando el contenedor arranque y el `volume` es inicializado, el contenedor va a tener esos ficheros.
 
 ## Use bind mounts
 
@@ -219,7 +219,6 @@ Los `volume` y `bind mounts` permite compartir ficheros entre el `host` y el con
 Si corremos Docker en Linux, tenemos una tercera opción: `tmpfs` mounts. Cuando creamos un contenedor con `tmpfs` mount, el contenedor puede crear ficheros fuera de la capa de escritura del mismo.
 
 Al contrario que los `volume` y `bind mounts`, un `tmpfs` mount es temporal, y sólo persiste en el host en memoria. Cuando el contenedor para, el `tmpfs` mount es eliminado, y los ficheros escritos no serán persistidos.
-
 
 Esto es útil para almacenar temporalmente almacenar ficheros con `sensitive data` que no se quieran persistir ni en el host o en la capa de escritura del contenedor.
 
