@@ -91,7 +91,8 @@ docker login index.docker.io/v1/
 We can see our settings on `./.docker/config.json`
 
 ```bash
-$ cat ./.docker/config.json
+cat ./.docker/config.json
+
 {
         "auths": {
                 "https://index.docker.io/v1/": {},

@@ -119,7 +119,7 @@ Siempre podemos crear nuestras propias redes.
 ```bash
 docker network create --driver=bridge \
 --subnet=172.100.1.0/24 --gateway=172.100.1.1 \
---ip-range=172.100.1.2/25 mybridge
+--ip-range=172.100.1.0/25 mybridge
 ```
 
 ```bash
